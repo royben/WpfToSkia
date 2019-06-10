@@ -35,6 +35,7 @@ namespace WpfToSkia
             AddVisualChild(_image);
             AddLogicalChild(_image);
 
+            SkiaElementResolver.Default.Clear();
             SkiaElementResolver.Default.RegisterBinder<Border, SkiaBorder>();
             SkiaElementResolver.Default.RegisterBinder<StackPanel, SkiaStackPanel>();
             SkiaElementResolver.Default.RegisterBinder<TextBlock, SkiaTextBlock>();

@@ -1,28 +1,21 @@
-﻿<Window x:Class="WpfToSkia.MainWindow"
+﻿<Window x:Class="WpfToSkia.Demo.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WpfToSkia"
+        xmlns:skia="clr-namespace:WpfToSkia;assembly=WpfToSkia"
+        xmlns:local="clr-namespace:WpfToSkia.Demo"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <local:SkiaHost>
+        <skia:SkiaHost>
             <Border Background="#9191C9" BorderBrush="Red">
                 <Border Background="Blue" BorderBrush="White" BorderThickness="1" Margin="40">
                     <Border Background="Red" Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Height="100">
-                        <TextBlock HorizontalAlignment="Right" Foreground="Blue" FontSize="16" VerticalAlignment="Bottom" Margin="10">Roy Ben Shabat</TextBlock>
+                        <TextBlock HorizontalAlignment="Right" Foreground="White" FontSize="16" VerticalAlignment="Bottom" Margin="10">Roy Ben Shabat</TextBlock>
                     </Border>
-                    <!--<Border Background="Blue" BorderBrush="Gray" BorderThickness="1" Margin="20" Width="100" Height="100">
-                        --><!--<StackPanel>
-                        <TextBlock>Roy</TextBlock>
-                    </StackPanel>--><!--
-                    </Border>-->
-                    <!--<StackPanel>
-                        <TextBlock>Roy</TextBlock>
-                    </StackPanel>-->
                 </Border>
             </Border>
-        </local:SkiaHost>
+        </skia:SkiaHost>
     </Grid>
 </Window>

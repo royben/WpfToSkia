@@ -35,6 +35,11 @@ namespace WpfToSkia
             _binders.Add(typeof(TWpf), typeof(TSkia));
         }
 
+        public void Clear()
+        {
+            _binders.Clear();
+        }
+
         public SkiaFrameworkElement CreateElementFor(FrameworkElement element)
         {
             Type skiaType = null;
