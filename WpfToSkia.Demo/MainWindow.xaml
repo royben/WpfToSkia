@@ -12,7 +12,7 @@
             <Border Background="#9191C9" BorderBrush="Red">
                 <Border Background="Blue" BorderBrush="White" BorderThickness="1" Margin="40">
                     <Border Background="Red" Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Height="100">
-                        <TextBlock HorizontalAlignment="Right" Foreground="White" FontSize="16" VerticalAlignment="Bottom" Margin="10">Roy Ben Shabat</TextBlock>
+                        <TextBlock HorizontalAlignment="Right" Foreground="White" FontWeight="Bold" FontSize="16" VerticalAlignment="Center" Margin="10 -2 10 0">Roy Ben Shabat</TextBlock>
                     </Border>
                 </Border>
             </Border>

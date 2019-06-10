@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using SkiaSharp;
 using WpfToSkia.ExtensionsMethods;
 
@@ -18,8 +19,9 @@ namespace WpfToSkia.SkiaElements
 
             SKPaint paint = new SKPaint()
             {
-                Typeface = SKTypeface.FromFamilyName(textBlock.FontFamily.ToString()),
+                Typeface = CreateTypeFace(),
                 TextSize = textBlock.FontSize.ToFloat(),
+                IsAntialias = RenderOptions.GetEdgeMode(textBlock) == EdgeMode.Aliased ? false : true,
             };
 
             if (textBlock.Foreground != null)
@@ -53,7 +55,7 @@ namespace WpfToSkia.SkiaElements
 
             SKPaint paint = new SKPaint()
             {
-                Typeface = SKTypeface.FromFamilyName(textBlock.FontFamily.ToString()),
+                Typeface = CreateTypeFace(),
                 TextSize = textBlock.FontSize.ToFloat(),
             };
 
@@ -61,6 +63,24 @@ namespace WpfToSkia.SkiaElements
             paint.MeasureText(textBlock.Text, ref rect);
 
             return new Size(rect.Width, rect.Height);
+        }
+
+        private SKTypeface CreateTypeFace()
+        {
+            TextBlock textBlock = WpfElement as TextBlock;
+
+            SKFontStyleSlant fontStyle = SKFontStyleSlant.Upright;
+
+            if (textBlock.FontStyle == FontStyles.Italic)
+            {
+                fontStyle = SKFontStyleSlant.Italic;
+            }
+            else if (textBlock.FontStyle == FontStyles.Oblique)
+            {
+                fontStyle = SKFontStyleSlant.Oblique;
+            }
+
+            return SKTypeface.FromFamilyName(textBlock.FontFamily.ToString(), new SKFontStyle(textBlock.FontWeight.ToOpenTypeWeight(), 1, fontStyle));
         }
     }
 }
