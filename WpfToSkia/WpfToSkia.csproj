@@ -95,6 +95,10 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BindingEventArgs.cs" />
+    <Compile Include="BindingEventContainer.cs" />
+    <Compile Include="BindingProperty.cs" />
+    <Compile Include="BindingPropertyMode.cs" />
     <Compile Include="ExtensionsMethods\BrushExtensions.cs" />
     <Compile Include="ExtensionsMethods\ColorExtensions.cs" />
     <Compile Include="ExtensionsMethods\DoubleExtensions.cs" />

@@ -12,8 +12,10 @@ namespace WpfToSkia.SkiaElements
 {
     public class SkiaBorder : SkiaFrameworkElement
     {
-        public override void Render(SKCanvas canvas, Rect bounds)
+        public override void Render(SKCanvas canvas, Rect bounds, double opacity = 1)
         {
+            base.Render(canvas, bounds);
+
             Border border = WpfElement as Border;
 
             if (border.Background != null)
@@ -24,19 +26,21 @@ namespace WpfToSkia.SkiaElements
                     {
                         Style = SKPaintStyle.Fill,
                         Shader = border.Background.ToSkiaShader(bounds.Width, bounds.Height),
+                        ColorFilter = SKColorFilter.CreateBlendMode(SKColors.White.WithAlpha((byte)(border.Opacity * 255d)), SKBlendMode.DstIn)
                     });
             }
 
             if (border.BorderBrush != null && (border.BorderThickness.Top > 0 || border.BorderThickness.Left > 0 || border.BorderThickness.Right > 0 || border.BorderThickness.Bottom > 0))
             {
                 canvas.DrawRoundRect(
-                    new SKRoundRect(bounds.ToSKRect(), border.CornerRadius.TopLeft.ToFloat(), border.CornerRadius.TopRight.ToFloat()),
+                    new SKRoundRect(bounds.ToSKRectCollapseThickness(border.BorderThickness), border.CornerRadius.TopLeft.ToFloat(), border.CornerRadius.TopRight.ToFloat()),
                     new SKPaint()
                     {
                         Style = SKPaintStyle.Stroke,
                         Color = border.BorderBrush.ToSKColor(),
                         IsStroke = true,
                         StrokeWidth = border.BorderThickness.Left.ToFloat(),
+                        ColorFilter = SKColorFilter.CreateBlendMode(SKColors.White.WithAlpha((byte)(border.Opacity * 255d)), SKBlendMode.DstIn),
                     });
             }
 
@@ -78,7 +82,7 @@ namespace WpfToSkia.SkiaElements
 
                 Rect childBounds = new Rect(left, top, width, height);
 
-                child.Render(canvas, childBounds);
+                child.Render(canvas, childBounds, border.Opacity);
             }
         }
 

@@ -13,7 +13,7 @@ namespace WpfToSkia.SkiaElements
 {
     public class SkiaTextBlock : SkiaFrameworkElement
     {
-        public override void Render(SKCanvas canvas, Rect bounds)
+        public override void Render(SKCanvas canvas, Rect bounds, double opacity = 1)
         {
             TextBlock textBlock = WpfElement as TextBlock;
 
@@ -22,6 +22,7 @@ namespace WpfToSkia.SkiaElements
                 Typeface = CreateTypeFace(),
                 TextSize = textBlock.FontSize.ToFloat(),
                 IsAntialias = RenderOptions.GetEdgeMode(textBlock) == EdgeMode.Aliased ? false : true,
+                ColorFilter = SKColorFilter.CreateBlendMode(SKColors.White.WithAlpha((byte)((opacity * textBlock.Opacity) * 255d)), SKBlendMode.DstIn)
             };
 
             if (textBlock.Foreground != null)

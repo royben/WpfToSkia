@@ -7,12 +7,28 @@
         xmlns:local="clr-namespace:WpfToSkia.Demo"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
+    <Grid Background="Transparent" MouseEnter="Grid_MouseEnter">
         <skia:SkiaHost>
-            <Border Background="#9191C9" BorderBrush="Red">
+            <Border Background="#9191C9" BorderBrush="Red" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <Border Background="Blue" BorderBrush="White" BorderThickness="1" Margin="40">
-                    <Border Background="Red" Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Height="100">
-                        <TextBlock HorizontalAlignment="Right" Foreground="White" FontWeight="Bold" FontSize="16" VerticalAlignment="Center" Margin="10 -2 10 0">Roy Ben Shabat</TextBlock>
+                    <Border x:Name="border" Background="White" Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Height="100" BorderThickness="10" BorderBrush="Black">
+                        <Border.Triggers>
+                            <EventTrigger RoutedEvent="MouseEnter">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" To="0" Duration="00:00:1"></DoubleAnimation>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                            <EventTrigger RoutedEvent="MouseLeave">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" To="1" Duration="00:00:1"></DoubleAnimation>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Border.Triggers>
+                        <TextBlock HorizontalAlignment="Center" Opacity="0.5" Foreground="Black" FontWeight="Bold" FontSize="16" VerticalAlignment="Center">Roy Ben Shabat</TextBlock>
                     </Border>
                 </Border>
             </Border>

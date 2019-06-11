@@ -1,6 +1,7 @@
 ﻿using SkiaSharp;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +18,12 @@ namespace WpfToSkia.ExtensionsMethods
                             bounds.Top + element.Margin.Top,
                             bounds.Width - element.Margin.Left - element.Margin.Right,
                             bounds.Height - element.Margin.Top - element.Margin.Bottom);
+        }
+
+        public static bool DesignMode(this FrameworkElement element)
+        {
+            return (DesignerProperties.GetIsInDesignMode(element));
+
         }
     }
 }

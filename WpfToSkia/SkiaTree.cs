@@ -14,5 +14,22 @@ namespace WpfToSkia
         {
             Root = root;
         }
+
+        public List<SkiaFrameworkElement> Flatten()
+        {
+            return IterateInternal(Root, new List<SkiaFrameworkElement>());
+        }
+
+        private List<SkiaFrameworkElement> IterateInternal(SkiaFrameworkElement element, List<SkiaFrameworkElement> list)
+        {
+            list.Add(element);
+
+            foreach (var item in element.Children)
+            {
+                IterateInternal(item, list);
+            }
+
+            return list;
+        }
     }
 }

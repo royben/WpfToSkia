@@ -24,5 +24,10 @@ namespace WpfToSkia.Demo
         {
             InitializeComponent();
         }
+
+        private void Grid_MouseEnter(object sender, MouseEventArgs e)
+        {
+            //border.Opacity -= 0.1;
+        }
     }
 }

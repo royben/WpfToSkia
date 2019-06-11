@@ -14,5 +14,10 @@ namespace WpfToSkia.ExtensionsMethods
         {
             return new SKRect(rect.Left.ToFloat(), rect.Top.ToFloat(), rect.Right.ToFloat(), rect.Bottom.ToFloat());
         }
+
+        public static SKRect ToSKRectCollapseThickness(this Rect rect, Thickness thickness)
+        {
+            return new SKRect((rect.Left + thickness.Left / 2).ToFloat(), (rect.Top + thickness.Top / 2).ToFloat(), (rect.Right - thickness.Right / 2).ToFloat(), (rect.Bottom - thickness.Bottom / 2).ToFloat());
+        }
     }
 }
