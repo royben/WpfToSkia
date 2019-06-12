@@ -12,36 +12,37 @@ namespace WpfToSkia.SkiaElements
 {
     public class SkiaBorder : SkiaFrameworkElement
     {
-        public override void Render(SKCanvas canvas, Rect bounds, double opacity = 1)
+        public override void Render(RenderPackage package)
         {
-            base.Render(canvas, bounds);
+            base.Render(package);
+
+            var canvas = package.Canvas;
+            var bounds = package.Bounds;
+            var opacity = package.Opacity;
 
             Border border = WpfElement as Border;
 
             if (border.Background != null)
             {
                 canvas.DrawRoundRect(
-                    new SKRoundRect(bounds.ToSKRect(), border.CornerRadius.TopLeft.ToFloat(), border.CornerRadius.TopRight.ToFloat()),
-                    new SKPaint()
-                    {
-                        Style = SKPaintStyle.Fill,
-                        Shader = border.Background.ToSkiaShader(bounds.Width, bounds.Height),
-                        ColorFilter = SKColorFilter.CreateBlendMode(SKColors.White.WithAlpha((byte)(border.Opacity * 255d)), SKBlendMode.DstIn)
-                    });
+                    new SKRoundRect(bounds.ToSKRectStroke(border.BorderThickness), border.CornerRadius.TopLeft.ToFloat(), border.CornerRadius.TopRight.ToFloat()),
+                    new SKPaintBuilder(border, package)
+                    .SetFill(border.Background)
+                    .Build());
             }
 
             if (border.BorderBrush != null && (border.BorderThickness.Top > 0 || border.BorderThickness.Left > 0 || border.BorderThickness.Right > 0 || border.BorderThickness.Bottom > 0))
             {
                 canvas.DrawRoundRect(
-                    new SKRoundRect(bounds.ToSKRectCollapseThickness(border.BorderThickness), border.CornerRadius.TopLeft.ToFloat(), border.CornerRadius.TopRight.ToFloat()),
-                    new SKPaint()
-                    {
-                        Style = SKPaintStyle.Stroke,
-                        Color = border.BorderBrush.ToSKColor(),
-                        IsStroke = true,
-                        StrokeWidth = border.BorderThickness.Left.ToFloat(),
-                        ColorFilter = SKColorFilter.CreateBlendMode(SKColors.White.WithAlpha((byte)(border.Opacity * 255d)), SKBlendMode.DstIn),
-                    });
+                    new SKRoundRect(bounds.ToSKRectStroke(border.BorderThickness), border.CornerRadius.TopLeft.ToFloat(), border.CornerRadius.TopRight.ToFloat()),
+                    new SKPaintBuilder(border, package)
+                    .SetStroke(border.BorderBrush, border.BorderThickness)
+                    .Build());
+            }
+
+            if (border.ClipToBounds)
+            {
+                canvas.ClipRoundRect(new SKRoundRect(bounds.ToSKRectClip(border.BorderThickness), border.CornerRadius.TopLeft.ToFloat(), border.CornerRadius.TopRight.ToFloat()), SKClipOperation.Intersect, false);
             }
 
             foreach (var child in Children)
@@ -82,7 +83,12 @@ namespace WpfToSkia.SkiaElements
 
                 Rect childBounds = new Rect(left, top, width, height);
 
-                child.Render(canvas, childBounds, border.Opacity);
+                child.Render(new RenderPackage()
+                {
+                    Canvas = canvas,
+                    Bounds = childBounds,
+                    Opacity = border.Opacity,
+                });
             }
         }
 
@@ -103,7 +109,7 @@ namespace WpfToSkia.SkiaElements
 
             if (Children.Count > 0)
             {
-                var sizes = Children.Select(x => x.Measure(new Size(width, height))).ToList();
+                var sizes = Children.Select(x => x.Measure(new Size(width.PositiveLimit(), height.PositiveLimit()))).ToList();
                 var max_width = sizes.Max(x => x.Width) + Children.Max(x => x.WpfElement.Margin.Left) + Children.Max(x => x.WpfElement.Margin.Right);
                 var max_height = sizes.Max(x => x.Height) + Children.Max(x => x.WpfElement.Margin.Top) + Children.Max(x => x.WpfElement.Margin.Bottom);
 
@@ -118,7 +124,7 @@ namespace WpfToSkia.SkiaElements
                 }
             }
 
-            return new Size(width, height);
+            return new Size(width.PositiveLimit(), height.PositiveLimit());
         }
     }
 }

@@ -27,5 +27,10 @@ namespace WpfToSkia.ExtensionsMethods
         {
             return double.IsNaN(value);
         }
+
+        public static double PositiveLimit(this double value)
+        {
+            return Math.Max(value, 0);
+        }
     }
 }

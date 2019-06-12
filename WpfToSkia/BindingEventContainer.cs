@@ -11,9 +11,6 @@ namespace WpfToSkia
 {
     public class BindingEventContainer : DependencyObject
     {
-        private SkiaFrameworkElement _skiaElement;
-        private FrameworkElement _wpfElement;
-
         public event EventHandler<BindingEventArgs> ValueChanged;
 
         public Object Value
@@ -24,30 +21,34 @@ namespace WpfToSkia
         public static readonly DependencyProperty ValueProperty =
             DependencyProperty.Register("Value", typeof(Object), typeof(BindingEventContainer), new PropertyMetadata(null, (d, e) => (d as BindingEventContainer).OnValueChanged()));
 
-        public BindingEventContainer(SkiaFrameworkElement skiaElement, FrameworkElement wpfElement)
+        public BindingProperty BindingProperty { get; set; }
+
+        public SkiaFrameworkElement SkiaElement { get; set; }
+
+        public BindingEventContainer(SkiaFrameworkElement skiaElement, BindingProperty bindingProperty)
         {
-            _skiaElement = skiaElement;
-            _wpfElement = wpfElement;
+            SkiaElement = skiaElement;
+            BindingProperty = bindingProperty;
         }
 
         private void OnValueChanged()
         {
             ValueChanged?.Invoke(this, new BindingEventArgs()
             {
-                WpfElement = _wpfElement,
-                SkiaElement = _skiaElement,
+                BindingProperty = BindingProperty,
+                SkiaElement = SkiaElement,
                 Value = Value,
             });
         }
 
-        public static BindingEventContainer Generate(SkiaFrameworkElement skiaElement, FrameworkElement wpfElement, DependencyProperty elementProperty)
+        public static BindingEventContainer Generate(SkiaFrameworkElement skiaElement, BindingProperty bindingProperty)
         {
-            BindingEventContainer container = new BindingEventContainer(skiaElement, wpfElement);
+            BindingEventContainer container = new BindingEventContainer(skiaElement, bindingProperty);
 
             Binding binding = new Binding();
             binding.Mode = BindingMode.OneWay;
-            binding.Source = wpfElement;
-            binding.Path = new PropertyPath(elementProperty);
+            binding.Source = skiaElement.WpfElement;
+            binding.Path = new PropertyPath(bindingProperty.DependencyProperty);
             BindingOperations.SetBinding(container, BindingEventContainer.ValueProperty, binding);
 
             return container;

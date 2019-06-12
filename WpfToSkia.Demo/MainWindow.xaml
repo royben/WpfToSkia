@@ -10,7 +10,7 @@
     <Grid Background="Transparent" MouseEnter="Grid_MouseEnter">
         <skia:SkiaHost>
             <Border Background="#9191C9" BorderBrush="Red" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <Border Background="Blue" BorderBrush="White" BorderThickness="1" Margin="40">
+                <Border Background="Blue" BorderBrush="White" BorderThickness="2" Margin="40" CornerRadius="20">
                     <Border x:Name="border" Background="White" Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Height="100" BorderThickness="10" BorderBrush="Black">
                         <Border.Triggers>
                             <EventTrigger RoutedEvent="MouseEnter">

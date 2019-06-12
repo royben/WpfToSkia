@@ -11,7 +11,7 @@ namespace WpfToSkia
     public class BindingEventArgs : EventArgs
     {
         public SkiaFrameworkElement SkiaElement { get; set; }
-        public FrameworkElement WpfElement { get; set; }
+        public BindingProperty BindingProperty { get; set; }
         public Object Value { get; set; }
     }
 }

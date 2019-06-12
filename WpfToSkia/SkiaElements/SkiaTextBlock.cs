@@ -13,9 +13,13 @@ namespace WpfToSkia.SkiaElements
 {
     public class SkiaTextBlock : SkiaFrameworkElement
     {
-        public override void Render(SKCanvas canvas, Rect bounds, double opacity = 1)
+        public override void Render(RenderPackage package)
         {
             TextBlock textBlock = WpfElement as TextBlock;
+
+            var canvas = package.Canvas;
+            var bounds = package.Bounds;
+            var opacity = package.Opacity;
 
             SKPaint paint = new SKPaint()
             {

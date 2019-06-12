@@ -80,12 +80,19 @@ namespace WpfToSkia
 
                 foreach (var element in _tree.Flatten())
                 {
-                    foreach (var dp in element.GetBindingProperties())
+                    foreach (var bindingProperty in element.GetBindingProperties())
                     {
-                        var container = BindingEventContainer.Generate(element, element.WpfElement, dp.DependencyProperty);
+                        var container = BindingEventContainer.Generate(element, bindingProperty);
                         container.ValueChanged += (x, ee) =>
                         {
-                            InvalidatePartial(element.Bounds);
+                            if (ee.BindingProperty.Mode == BindingPropertyMode.AffectsRender)
+                            {
+                                InvalidatePartial(element.Bounds);
+                            }
+                            else
+                            {
+                                Invalidate();
+                            }
                         };
 
                         _containers.Add(container);
@@ -121,7 +128,11 @@ namespace WpfToSkia
 
             SKCanvas canvas = _surface.Canvas;
             canvas.Clear(new SKColor(0, 0, 0, 0));
-            _tree.Root.Render(canvas, new Rect(0, 0, ActualWidth, ActualHeight));
+            _tree.Root.Render(new RenderPackage()
+            {
+                Canvas = canvas,
+                Bounds = new Rect(0, 0, ActualWidth, ActualHeight)
+            });
 
             _bitmap.AddDirtyRect(new Int32Rect(0, 0, (int)_bitmap.Width, (int)_bitmap.Height));
             _bitmap.Unlock();
@@ -138,7 +149,11 @@ namespace WpfToSkia
             {
                 SKCanvas canvas = surface.Canvas;
                 canvas.Clear(new SKColor(0, 0, 0, 0));
-                _tree.Root.Render(canvas, new Rect(0, 0, ActualWidth, ActualHeight));
+                _tree.Root.Render(new RenderPackage()
+                {
+                    Canvas = canvas,
+                    Bounds = new Rect(0, 0, ActualWidth, ActualHeight)
+                });
             }
 
             _bitmap.AddDirtyRect(new Int32Rect((int)bounds.Left, (int)bounds.Top, (int)bounds.Width + 1, (int)bounds.Height + 1));

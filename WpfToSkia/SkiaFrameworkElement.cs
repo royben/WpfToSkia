@@ -5,7 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
+using WpfToSkia.ExtensionsMethods;
 
 namespace WpfToSkia
 {
@@ -20,27 +23,9 @@ namespace WpfToSkia
             Children = new List<SkiaFrameworkElement>();
         }
 
-        public virtual void Render(SKCanvas canvas, Rect bounds, double opacity = 1)
+        public virtual void Render(RenderPackage package)
         {
-            Bounds = bounds;
-        }
-
-        public virtual void Invalidate(WriteableBitmap bitmap)
-        {
-            int width = (int)bitmap.Width;
-            int height = (int)bitmap.Height;
-
-            bitmap.Lock();
-
-            using (var surface = SKSurface.Create(new SKImageInfo(width, height, SKColorType.Bgra8888, SKAlphaType.Premul), bitmap.BackBuffer, width * 4))
-            {
-                SKCanvas canvas = surface.Canvas;
-                canvas.Clear(new SKColor(0, 0, 0, 0));
-                Render(canvas, Bounds);
-            }
-
-            bitmap.AddDirtyRect(new Int32Rect((int)Bounds.Left, (int)Bounds.Top, (int)Bounds.Width, (int)Bounds.Height));
-            bitmap.Unlock();
+            Bounds = package.Bounds;
         }
 
         public virtual Size Measure(Size availableSize)
@@ -54,6 +39,50 @@ namespace WpfToSkia
             {
                  new BindingProperty(FrameworkElement.OpacityProperty,BindingPropertyMode.AffectsRender),
             };
+        }
+
+        protected class SKPaintBuilder
+        {
+            private SKPaint _paint;
+            private FrameworkElement _element;
+            private RenderPackage _package;
+
+            public SKPaintBuilder(FrameworkElement element, RenderPackage package)
+            {
+                _paint = new SKPaint();
+                _element = element;
+                _package = package;
+
+                _paint.IsAntialias = RenderOptions.GetEdgeMode(element) == EdgeMode.Aliased ? false : true;
+                _paint.ColorFilter = SKColorFilter.CreateBlendMode(SKColors.White.WithAlpha((byte)((package.Opacity * element.Opacity) * 255d)), SKBlendMode.DstIn);
+
+                if (element.Effect is DropShadowEffect)
+                {
+                    var fx = element.Effect as DropShadowEffect;
+                    _paint.ImageFilter = SKImageFilter.CreateDropShadow(fx.ShadowDepth.ToFloat(), fx.ShadowDepth.ToFloat(), fx.BlurRadius.ToFloat(), fx.BlurRadius.ToFloat(), fx.Color.ToSKColor(), SKDropShadowImageFilterShadowMode.DrawShadowAndForeground);
+                }
+            }
+
+            public SKPaintBuilder SetFill(Brush fill)
+            {
+                _paint.Style = SKPaintStyle.Fill;
+                _paint.Shader = fill.ToSkiaShader(_package.Bounds.Width, _package.Bounds.Height);
+                return this;
+            }
+
+            public SKPaintBuilder SetStroke(Brush stroke, Thickness thickness)
+            {
+                _paint.Style = SKPaintStyle.Stroke;
+                _paint.Color = stroke.ToSKColor();
+                _paint.IsStroke = true;
+                _paint.StrokeWidth = thickness.Left.ToFloat();
+                return this;
+            }
+
+            public SKPaint Build()
+            {
+                return _paint;
+            }
         }
     }
 }
