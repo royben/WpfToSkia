@@ -17,6 +17,7 @@ namespace WpfToSkia
         public Rect Bounds { get; set; }
         public FrameworkElement WpfElement { get; set; }
         public List<SkiaFrameworkElement> Children { get; set; }
+        public SkiaFrameworkElement Parent { get; set; }
 
         public SkiaFrameworkElement()
         {
@@ -25,7 +26,14 @@ namespace WpfToSkia
 
         public virtual void Render(RenderPackage package)
         {
-           
+            foreach (var child in Children)
+            {
+                child.Render(new RenderPackage()
+                {
+                    Canvas = package.Canvas,
+                    Opacity = Parent == null ? 1 : WpfElement.Opacity,
+                });
+            }
         }
 
         public virtual Size Measure(Size availableSize)
@@ -45,20 +53,27 @@ namespace WpfToSkia
         {
             private SKPaint _paint;
             private FrameworkElement _element;
+            private SkiaFrameworkElement _skia;
             private RenderPackage _package;
 
-            public SKPaintBuilder(FrameworkElement element, RenderPackage package)
+            public SKPaintBuilder(SkiaFrameworkElement skiaElement, RenderPackage package)
             {
                 _paint = new SKPaint();
-                _element = element;
+                _skia = skiaElement;
+                _element = _skia.WpfElement;
+                _skia = skiaElement;
                 _package = package;
 
-                _paint.IsAntialias = RenderOptions.GetEdgeMode(element) == EdgeMode.Aliased ? false : true;
-                _paint.ColorFilter = SKColorFilter.CreateBlendMode(SKColors.White.WithAlpha((byte)((package.Opacity * element.Opacity) * 255d)), SKBlendMode.DstIn);
+                _paint.IsAntialias = RenderOptions.GetEdgeMode(_element) == EdgeMode.Aliased ? false : true;
 
-                if (element.Effect is DropShadowEffect)
+                if (_skia.Parent != null)
                 {
-                    var fx = element.Effect as DropShadowEffect;
+                    _paint.ColorFilter = SKColorFilter.CreateBlendMode(SKColors.White.WithAlpha((byte)((package.Opacity * _element.Opacity) * 255d)), SKBlendMode.DstIn);
+                }
+
+                if (_element.Effect is DropShadowEffect)
+                {
+                    var fx = _element.Effect as DropShadowEffect;
                     _paint.ImageFilter = SKImageFilter.CreateDropShadow(fx.ShadowDepth.ToFloat(), fx.ShadowDepth.ToFloat(), fx.BlurRadius.ToFloat(), fx.BlurRadius.ToFloat(), fx.Color.ToSKColor(), SKDropShadowImageFilterShadowMode.DrawShadowAndForeground);
                 }
             }

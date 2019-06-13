@@ -120,6 +120,7 @@
     <Compile Include="RenderPackage.cs" />
     <Compile Include="SkiaElementResolver.cs" />
     <Compile Include="SkiaElements\SkiaBorder.cs" />
+    <Compile Include="SkiaElements\SkiaItemsControl.cs" />
     <Compile Include="SkiaElements\SkiaStackPanel.cs" />
     <Compile Include="SkiaElements\SkiaTextBlock.cs" />
     <Compile Include="SkiaFrameworkElement.cs" />

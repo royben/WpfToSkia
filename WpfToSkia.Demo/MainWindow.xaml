@@ -6,11 +6,27 @@
         xmlns:skia="clr-namespace:WpfToSkia;assembly=WpfToSkia"
         xmlns:local="clr-namespace:WpfToSkia.Demo"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid Background="Transparent" MouseEnter="Grid_MouseEnter">
-        <skia:SkiaHost>
-            <Border Background="#9191C9" BorderBrush="Red" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <Border Background="Blue" BorderBrush="White" BorderThickness="2" Margin="40" CornerRadius="20">
+        Title="MainWindow" Height="450" Width="800" DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}" d:DataContext="{d:DesignInstance Type={x:Type local:MainWindow},IsDesignTimeCreatable=False}">
+    <Grid Background="Transparent">
+        <ScrollViewer HorizontalScrollBarVisibility="Visible">
+            <Border>
+                <skia:SkiaHost>
+                    <Border Background="#9191C9" BorderBrush="Red" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <ItemsControl ItemsSource="{Binding Items}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Border Width="50" Height="50">
+                                            <Border.Background>
+                                                <SolidColorBrush Color="{Binding Color}" />
+                                            </Border.Background>
+                                        </Border>
+                                        <TextBlock VerticalAlignment="Center" Margin="10 0 0 0" Text="{Binding Name}"></TextBlock>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <!--<Border Background="Blue" BorderBrush="White" BorderThickness="2" Margin="40" CornerRadius="20">
                     <Border x:Name="border" Background="White" Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Height="100" BorderThickness="10" BorderBrush="Black">
                         <Border.Triggers>
                             <EventTrigger RoutedEvent="MouseEnter">
@@ -30,8 +46,10 @@
                         </Border.Triggers>
                         <TextBlock HorizontalAlignment="Center" Opacity="0.5" Foreground="Black" FontWeight="Bold" FontSize="16" VerticalAlignment="Center">Roy Ben Shabat</TextBlock>
                     </Border>
-                </Border>
+                </Border>-->
+                    </Border>
+                </skia:SkiaHost>
             </Border>
-        </skia:SkiaHost>
+        </ScrollViewer>
     </Grid>
 </Window>

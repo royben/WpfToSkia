@@ -26,6 +26,7 @@ namespace WpfToSkia
         private SKSurface _surface;
         private FrameworkElement _mouseEnterElement;
         private bool _loaded;
+        private ScrollViewer _scrollViewer;
 
         public FrameworkElement Child
         {
@@ -37,7 +38,7 @@ namespace WpfToSkia
 
         public SkiaHost()
         {
-            _image = new Image() { Stretch = Stretch.Fill };
+            _image = new Image() { Stretch = Stretch.None, HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Top };
 
             if (!this.DesignMode())
             {
@@ -76,43 +77,63 @@ namespace WpfToSkia
             }
             else
             {
-                Child.Visibility = Visibility.Hidden;
+                _scrollViewer = this.FindAncestor<ScrollViewer>();
+
+                Child.Opacity = 0;
                 AddVisualChild(Child);
                 AddLogicalChild(Child);
 
-                InitCanvas();
-                _tree = WpfTreeHelper.LoadTree(Child);
-
-                foreach (var element in _tree.Flatten())
+                Child.Loaded += (_, __) => 
                 {
-                    foreach (var bindingProperty in element.GetBindingProperties())
+                    InitCanvas();
+                    _tree = WpfTreeHelper.LoadTree(Child);
+
+                    foreach (var element in _tree.Flatten())
                     {
-                        var container = BindingEventContainer.Generate(element, bindingProperty);
-                        container.ValueChanged += (x, ee) =>
+                        foreach (var bindingProperty in element.GetBindingProperties())
                         {
-                            if (ee.BindingProperty.Mode == BindingPropertyMode.AffectsRender)
+                            var container = BindingEventContainer.Generate(element, bindingProperty);
+                            container.ValueChanged += (x, ee) =>
                             {
-                                InvalidatePartial(element.Bounds);
-                            }
-                            else
-                            {
-                                Invalidate();
-                            }
-                        };
+                                if (ee.BindingProperty.Mode == BindingPropertyMode.AffectsRender)
+                                {
+                                    InvalidatePartial(element.Bounds);
+                                }
+                                else
+                                {
+                                    _tree.InvalidateBounds();
+                                    Invalidate();
+                                }
+                            };
 
-                        _containers.Add(container);
+                            _containers.Add(container);
+                        }
                     }
-                }
 
-                Invalidate();
+                    Invalidate();
 
-                _loaded = true;
+                    _loaded = true;
+
+                    _scrollViewer.ScrollChanged += (x, xx) =>
+                    {
+                        Invalidate();
+                    };
+                };
             }
         }
 
         private void InitCanvas()
         {
-            _bitmap = new WriteableBitmap((int)ActualWidth, (int)ActualHeight, 96, 96, PixelFormats.Bgra32, BitmapPalettes.Halftone256Transparent);
+            double renderWidth = ActualWidth;
+            double renderHeight = ActualHeight;
+
+            if (_scrollViewer != null)
+            {
+                renderWidth = _scrollViewer.ViewportWidth;
+                renderHeight = _scrollViewer.ViewportHeight;
+            }
+
+            _bitmap = new WriteableBitmap((int)renderWidth, (int)renderHeight, 96, 96, PixelFormats.Bgra32, BitmapPalettes.Halftone256Transparent);
 
             int width = (int)_bitmap.Width;
             int height = (int)_bitmap.Height;
@@ -194,14 +215,14 @@ namespace WpfToSkia
         {
             if (this.DesignMode())
             {
-                Child.Measure(availableSize);
+                return Child.DesiredSize;
             }
             else
             {
                 Child.Measure(availableSize);
                 _image.Measure(availableSize);
             }
-            return availableSize;
+            return Child.DesiredSize;
         }
 
         protected override Size ArrangeOverride(Size finalSize)
@@ -222,6 +243,8 @@ namespace WpfToSkia
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
+
+            return;
 
             Rect mouseRect = new Rect(e.GetPosition(this), new Size(1, 1));
 

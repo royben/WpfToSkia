@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,14 +21,27 @@ namespace WpfToSkia.Demo
     /// </summary>
     public partial class MainWindow : Window
     {
+        public ObservableCollection<DataItem> Items
+        {
+            get { return (ObservableCollection<DataItem>)GetValue(ItemsProperty); }
+            set { SetValue(ItemsProperty, value); }
+        }
+        public static readonly DependencyProperty ItemsProperty =
+            DependencyProperty.Register("Items", typeof(ObservableCollection<DataItem>), typeof(MainWindow), new PropertyMetadata(null));
+
         public MainWindow()
         {
             InitializeComponent();
-        }
 
-        private void Grid_MouseEnter(object sender, MouseEventArgs e)
-        {
-            //border.Opacity -= 0.1;
+            Items = new ObservableCollection<DataItem>();
+
+            for (int i = 0; i < 5000; i++)
+            {
+                Items.Add(new DataItem()
+                {
+                     Name = "Roy Ben Shabat " + i,
+                });
+            }
         }
     }
 }

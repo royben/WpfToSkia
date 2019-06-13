@@ -36,6 +36,7 @@ namespace WpfToSkia
 
                         if (treeItem != null)
                         {
+                            treeItem.Parent = item;
                             treeItem.Bounds = new Rect(new_offset.X, new_offset.Y, element.ActualWidth, element.ActualHeight);
                             item.Children.Add(treeItem);
                         }

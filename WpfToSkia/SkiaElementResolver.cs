@@ -49,8 +49,12 @@ namespace WpfToSkia
                 skiaElement.WpfElement = element;
                 return skiaElement;
             }
-
-            return null;
+            else
+            {
+                SkiaFrameworkElement defaultElement = Activator.CreateInstance(typeof(SkiaFrameworkElement)) as SkiaFrameworkElement;
+                defaultElement.WpfElement = element;
+                return defaultElement;
+            }
         }
     }
 }

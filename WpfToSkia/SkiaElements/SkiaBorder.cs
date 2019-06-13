@@ -20,13 +20,18 @@ namespace WpfToSkia.SkiaElements
             var bounds = Bounds;
             var opacity = package.Opacity;
 
+            if (Parent == null)
+            {
+                opacity = 1;
+            }
+
             Border border = WpfElement as Border;
 
             if (border.Background != null)
             {
                 canvas.DrawRoundRect(
                     new SKRoundRect(bounds.ToSKRectStroke(border.BorderThickness), border.CornerRadius.TopLeft.ToFloat(), border.CornerRadius.TopRight.ToFloat()),
-                    new SKPaintBuilder(border, package)
+                    new SKPaintBuilder(this, package)
                     .SetFill(border.Background)
                     .Build());
             }
@@ -35,7 +40,7 @@ namespace WpfToSkia.SkiaElements
             {
                 canvas.DrawRoundRect(
                     new SKRoundRect(bounds.ToSKRectStroke(border.BorderThickness), border.CornerRadius.TopLeft.ToFloat(), border.CornerRadius.TopRight.ToFloat()),
-                    new SKPaintBuilder(border, package)
+                    new SKPaintBuilder(this, package)
                     .SetStroke(border.BorderBrush, border.BorderThickness)
                     .Build());
             }
@@ -47,46 +52,46 @@ namespace WpfToSkia.SkiaElements
 
             foreach (var child in Children)
             {
-                var measureSize = child.Measure(bounds.Size);
-                var element = child.WpfElement;
+                //var measureSize = child.Measure(bounds.Size);
+                //var element = child.WpfElement;
 
-                double left = bounds.Left + element.Margin.Left;
-                double top = bounds.Top + element.Margin.Top;
-                double width = measureSize.Width;
-                double height = measureSize.Height;
+                //double left = bounds.Left + element.Margin.Left;
+                //double top = bounds.Top + element.Margin.Top;
+                //double width = measureSize.Width;
+                //double height = measureSize.Height;
 
-                if (element.HorizontalAlignment == HorizontalAlignment.Left)
-                {
-                    left = bounds.Left + element.Margin.Left;
-                }
-                else if (element.HorizontalAlignment == HorizontalAlignment.Right)
-                {
-                    left = bounds.Left + bounds.Width - width - element.Margin.Right;
-                }
-                else if (element.HorizontalAlignment == HorizontalAlignment.Center)
-                {
-                    left = bounds.Left + (bounds.Width / 2) - (width / 2) + element.Margin.Left - element.Margin.Right;
-                }
+                //if (element.HorizontalAlignment == HorizontalAlignment.Left)
+                //{
+                //    left = bounds.Left + element.Margin.Left;
+                //}
+                //else if (element.HorizontalAlignment == HorizontalAlignment.Right)
+                //{
+                //    left = bounds.Left + bounds.Width - width - element.Margin.Right;
+                //}
+                //else if (element.HorizontalAlignment == HorizontalAlignment.Center)
+                //{
+                //    left = bounds.Left + (bounds.Width / 2) - (width / 2) + element.Margin.Left - element.Margin.Right;
+                //}
 
-                if (element.VerticalAlignment == VerticalAlignment.Top)
-                {
-                    top = bounds.Top + element.Margin.Top;
-                }
-                else if (element.VerticalAlignment == VerticalAlignment.Bottom)
-                {
-                    top = bounds.Top + bounds.Height - height - element.Margin.Bottom;
-                }
-                else if (element.VerticalAlignment == VerticalAlignment.Center)
-                {
-                    top = bounds.Top + (bounds.Height / 2) - (height / 2) + element.Margin.Top - element.Margin.Bottom;
-                }
+                //if (element.VerticalAlignment == VerticalAlignment.Top)
+                //{
+                //    top = bounds.Top + element.Margin.Top;
+                //}
+                //else if (element.VerticalAlignment == VerticalAlignment.Bottom)
+                //{
+                //    top = bounds.Top + bounds.Height - height - element.Margin.Bottom;
+                //}
+                //else if (element.VerticalAlignment == VerticalAlignment.Center)
+                //{
+                //    top = bounds.Top + (bounds.Height / 2) - (height / 2) + element.Margin.Top - element.Margin.Bottom;
+                //}
 
-                Rect childBounds = new Rect(left, top, width, height);
+                //Rect childBounds = new Rect(left, top, width, height);
 
                 child.Render(new RenderPackage()
                 {
                     Canvas = canvas,
-                    Opacity = border.Opacity,
+                    Opacity = Parent == null ? 1 : border.Opacity,
                 });
             }
         }

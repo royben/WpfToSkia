@@ -32,5 +32,15 @@ namespace WpfToSkia.ExtensionsMethods
             var offset = VisualTreeHelper.GetOffset(element);
             return new Rect(parentOffset.X + offset.X, parentOffset.Y + offset.Y, element.ActualWidth, element.ActualHeight);
         }
+
+        public static T FindAncestor<T>(this DependencyObject dependencyObject) where T : class
+        {
+            var parent = VisualTreeHelper.GetParent(dependencyObject);
+
+            if (parent == null) return null;
+
+            var parentT = parent as T;
+            return parentT ?? FindAncestor<T>(parent);
+        }
     }
 }
