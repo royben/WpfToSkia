@@ -17,7 +17,7 @@ namespace WpfToSkia.SkiaElements
             base.Render(package);
 
             var canvas = package.Canvas;
-            var bounds = package.Bounds;
+            var bounds = Bounds;
             var opacity = package.Opacity;
 
             Border border = WpfElement as Border;
@@ -86,7 +86,6 @@ namespace WpfToSkia.SkiaElements
                 child.Render(new RenderPackage()
                 {
                     Canvas = canvas,
-                    Bounds = childBounds,
                     Opacity = border.Opacity,
                 });
             }

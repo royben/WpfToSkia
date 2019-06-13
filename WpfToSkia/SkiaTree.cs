@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Media;
 
 namespace WpfToSkia
 {
@@ -30,6 +32,23 @@ namespace WpfToSkia
             }
 
             return list;
+        }
+
+        public void InvalidateBounds()
+        {
+            InvalidateBoundsInternal(Root, new Vector(0, 0));
+        }
+
+        private void InvalidateBoundsInternal(SkiaFrameworkElement element, Vector offset)
+        {
+            var o = VisualTreeHelper.GetOffset(element.WpfElement);
+            var newoffset = new Vector(offset.X + o.X, offset.Y + o.Y);
+            element.Bounds = new Rect(newoffset.X, newoffset.Y, element.WpfElement.ActualWidth, element.WpfElement.ActualHeight);
+
+            foreach (var item in element.Children)
+            {
+                InvalidateBoundsInternal(item, newoffset);
+            }
         }
     }
 }

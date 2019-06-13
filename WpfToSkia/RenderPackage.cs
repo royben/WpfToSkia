@@ -11,7 +11,6 @@ namespace WpfToSkia
     public class RenderPackage
     {
         public SKCanvas Canvas { get; set; }
-        public Rect Bounds { get; set; }
         public double Opacity { get; set; }
 
         public RenderPackage()

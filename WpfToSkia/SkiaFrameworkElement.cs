@@ -14,7 +14,7 @@ namespace WpfToSkia
 {
     public class SkiaFrameworkElement
     {
-        public Rect Bounds { get; private set; }
+        public Rect Bounds { get; set; }
         public FrameworkElement WpfElement { get; set; }
         public List<SkiaFrameworkElement> Children { get; set; }
 
@@ -25,7 +25,7 @@ namespace WpfToSkia
 
         public virtual void Render(RenderPackage package)
         {
-            Bounds = package.Bounds;
+           
         }
 
         public virtual Size Measure(Size availableSize)
@@ -66,7 +66,7 @@ namespace WpfToSkia
             public SKPaintBuilder SetFill(Brush fill)
             {
                 _paint.Style = SKPaintStyle.Fill;
-                _paint.Shader = fill.ToSkiaShader(_package.Bounds.Width, _package.Bounds.Height);
+                _paint.Shader = fill.ToSkiaShader(_element.ActualWidth, _element.ActualHeight);
                 return this;
             }
 

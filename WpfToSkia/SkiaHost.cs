@@ -61,6 +61,7 @@ namespace WpfToSkia
         {
             if (!this.DesignMode() && _loaded)
             {
+                _tree.InvalidateBounds();
                 InitCanvas();
                 Invalidate();
             }
@@ -75,6 +76,10 @@ namespace WpfToSkia
             }
             else
             {
+                Child.Visibility = Visibility.Hidden;
+                AddVisualChild(Child);
+                AddLogicalChild(Child);
+
                 InitCanvas();
                 _tree = WpfTreeHelper.LoadTree(Child);
 
@@ -131,7 +136,6 @@ namespace WpfToSkia
             _tree.Root.Render(new RenderPackage()
             {
                 Canvas = canvas,
-                Bounds = new Rect(0, 0, ActualWidth, ActualHeight)
             });
 
             _bitmap.AddDirtyRect(new Int32Rect(0, 0, (int)_bitmap.Width, (int)_bitmap.Height));
@@ -152,7 +156,6 @@ namespace WpfToSkia
                 _tree.Root.Render(new RenderPackage()
                 {
                     Canvas = canvas,
-                    Bounds = new Rect(0, 0, ActualWidth, ActualHeight)
                 });
             }
 
@@ -164,13 +167,27 @@ namespace WpfToSkia
         {
             get
             {
-                return 1;
+                return this.DesignMode() ? 1 : 2;
             }
         }
 
         protected override Visual GetVisualChild(int index)
         {
-            return this.DesignMode() ? Child : _image;
+            if (this.DesignMode())
+            {
+                return Child;
+            }
+            else
+            {
+                if (index == 0)
+                {
+                    return _image;
+                }
+                else
+                {
+                    return Child;
+                }
+            }
         }
 
         protected override Size MeasureOverride(Size availableSize)
@@ -181,6 +198,7 @@ namespace WpfToSkia
             }
             else
             {
+                Child.Measure(availableSize);
                 _image.Measure(availableSize);
             }
             return availableSize;
@@ -194,6 +212,7 @@ namespace WpfToSkia
             }
             else
             {
+                Child.Arrange(new Rect(new Point(0.0, 0.0), finalSize));
                 _image.Arrange(new Rect(new Point(0.0, 0.0), finalSize));
             }
 

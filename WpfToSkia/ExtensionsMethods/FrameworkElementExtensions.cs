@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 
 namespace WpfToSkia.ExtensionsMethods
 {
@@ -23,7 +24,13 @@ namespace WpfToSkia.ExtensionsMethods
         public static bool DesignMode(this FrameworkElement element)
         {
             return (DesignerProperties.GetIsInDesignMode(element));
+        }
 
+        public static Rect GetBounds(this FrameworkElement element)
+        {
+            var parentOffset = VisualTreeHelper.GetOffset((VisualTreeHelper.GetParent(element) as FrameworkElement));
+            var offset = VisualTreeHelper.GetOffset(element);
+            return new Rect(parentOffset.X + offset.X, parentOffset.Y + offset.Y, element.ActualWidth, element.ActualHeight);
         }
     }
 }

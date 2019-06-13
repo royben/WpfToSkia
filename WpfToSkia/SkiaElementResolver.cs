@@ -50,7 +50,7 @@ namespace WpfToSkia
                 return skiaElement;
             }
 
-            throw new TypeLoadException($"Could not find a binder for type '{element.GetType()}'.");
+            return null;
         }
     }
 }

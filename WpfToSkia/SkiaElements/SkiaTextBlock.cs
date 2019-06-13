@@ -18,7 +18,7 @@ namespace WpfToSkia.SkiaElements
             TextBlock textBlock = WpfElement as TextBlock;
 
             var canvas = package.Canvas;
-            var bounds = package.Bounds;
+            var bounds = Bounds;
             var opacity = package.Opacity;
 
             SKPaint paint = new SKPaint()
