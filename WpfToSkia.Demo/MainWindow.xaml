@@ -13,9 +13,20 @@
                 <skia:SkiaHost>
                     <Border Background="#9191C9" BorderBrush="Red" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                         <ItemsControl ItemsSource="{Binding Items}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <Canvas Width="1920" Height="1080" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemContainerStyle>
+                                <Style TargetType="FrameworkElement">
+                                    <Setter Property="Canvas.Left" Value="{Binding X}"></Setter>
+                                    <Setter Property="Canvas.Top" Value="{Binding Y}"></Setter>
+                                </Style>
+                            </ItemsControl.ItemContainerStyle>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal" Margin="10">
                                         <Border Width="50" Height="50">
                                             <Border.Background>
                                                 <SolidColorBrush Color="{Binding Color}" />

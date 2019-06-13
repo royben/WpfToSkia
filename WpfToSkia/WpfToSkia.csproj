@@ -127,6 +127,16 @@
     <Compile Include="SkiaHost.cs" />
     <Compile Include="SkiaTree.cs" />
     <Compile Include="SkiaTreeHelper.cs" />
+    <Compile Include="Wgl\Gdi32.cs" />
+    <Compile Include="Wgl\GlContext.cs" />
+    <Compile Include="Wgl\Kernel32.cs" />
+    <Compile Include="Wgl\PIXELFORMATDESCRIPTOR.cs" />
+    <Compile Include="Wgl\RECT.cs" />
+    <Compile Include="Wgl\User32.cs" />
+    <Compile Include="Wgl\Wgl.cs" />
+    <Compile Include="Wgl\WglContext.cs" />
+    <Compile Include="Wgl\WindowStyles.cs" />
+    <Compile Include="Wgl\WNDCLASS.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

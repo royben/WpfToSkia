@@ -12,6 +12,8 @@ namespace WpfToSkia
     {
         public SKCanvas Canvas { get; set; }
         public double Opacity { get; set; }
+        public Point Offset { get; set; }
+        public Rect Viewport { get; set; }
 
         public RenderPackage()
         {

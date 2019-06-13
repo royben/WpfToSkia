@@ -30,7 +30,7 @@ namespace WpfToSkia.SkiaElements
             if (border.Background != null)
             {
                 canvas.DrawRoundRect(
-                    new SKRoundRect(bounds.ToSKRectStroke(border.BorderThickness), border.CornerRadius.TopLeft.ToFloat(), border.CornerRadius.TopRight.ToFloat()),
+                    new SKRoundRect(bounds.ToSKRectStroke(border.BorderThickness, package.Offset.X, package.Offset.Y), border.CornerRadius.TopLeft.ToFloat(), border.CornerRadius.TopRight.ToFloat()),
                     new SKPaintBuilder(this, package)
                     .SetFill(border.Background)
                     .Build());
@@ -39,7 +39,7 @@ namespace WpfToSkia.SkiaElements
             if (border.BorderBrush != null && (border.BorderThickness.Top > 0 || border.BorderThickness.Left > 0 || border.BorderThickness.Right > 0 || border.BorderThickness.Bottom > 0))
             {
                 canvas.DrawRoundRect(
-                    new SKRoundRect(bounds.ToSKRectStroke(border.BorderThickness), border.CornerRadius.TopLeft.ToFloat(), border.CornerRadius.TopRight.ToFloat()),
+                    new SKRoundRect(bounds.ToSKRectStroke(border.BorderThickness, package.Offset.X, package.Offset.Y), border.CornerRadius.TopLeft.ToFloat(), border.CornerRadius.TopRight.ToFloat()),
                     new SKPaintBuilder(this, package)
                     .SetStroke(border.BorderBrush, border.BorderThickness)
                     .Build());
@@ -47,7 +47,7 @@ namespace WpfToSkia.SkiaElements
 
             if (border.ClipToBounds)
             {
-                canvas.ClipRoundRect(new SKRoundRect(bounds.ToSKRectClip(border.BorderThickness), border.CornerRadius.TopLeft.ToFloat(), border.CornerRadius.TopRight.ToFloat()), SKClipOperation.Intersect, false);
+                canvas.ClipRoundRect(new SKRoundRect(bounds.ToSKRectClip(border.BorderThickness, package.Offset.X, package.Offset.Y), border.CornerRadius.TopLeft.ToFloat(), border.CornerRadius.TopRight.ToFloat()), SKClipOperation.Intersect, false);
             }
 
             foreach (var child in Children)
@@ -92,6 +92,8 @@ namespace WpfToSkia.SkiaElements
                 {
                     Canvas = canvas,
                     Opacity = Parent == null ? 1 : border.Opacity,
+                    Offset = package.Offset,
+                    Viewport = package.Viewport,
                 });
             }
         }

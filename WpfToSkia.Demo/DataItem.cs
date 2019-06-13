@@ -15,9 +15,15 @@ namespace WpfToSkia.Demo
 
         public Color Color { get; set; }
 
+        public double X { get; set; }
+
+        public double Y { get; set; }
+
         public DataItem()
         {
             Color = Color.FromRgb((byte)_rnd.Next(0, 255), (byte)_rnd.Next(0, 255), (byte)_rnd.Next(0, 255));
+            X = _rnd.Next(0, 1920);
+            Y = _rnd.Next(0, 1080);
         }
     }
 }

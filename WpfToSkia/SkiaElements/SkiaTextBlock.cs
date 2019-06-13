@@ -26,7 +26,7 @@ namespace WpfToSkia.SkiaElements
                 Typeface = CreateTypeFace(),
                 TextSize = textBlock.FontSize.ToFloat(),
                 IsAntialias = RenderOptions.GetEdgeMode(textBlock) == EdgeMode.Aliased ? false : true,
-                ColorFilter = SKColorFilter.CreateBlendMode(SKColors.White.WithAlpha((byte)((opacity * textBlock.Opacity) * 255d)), SKBlendMode.DstIn)
+                //ColorFilter = SKColorFilter.CreateBlendMode(SKColors.White.WithAlpha((byte)((opacity * textBlock.Opacity) * 255d)), SKBlendMode.DstIn)
             };
 
             if (textBlock.Foreground != null)
@@ -47,8 +47,8 @@ namespace WpfToSkia.SkiaElements
                 paint.TextAlign = SKTextAlign.Center;
             }
 
-            double left = bounds.Left;
-            double top = bounds.Top;
+            double left = bounds.Left + package.Offset.X;
+            double top = bounds.Top + package.Offset.Y;
             float height = bounds.Height.ToFloat();
 
             canvas.DrawText(textBlock.Text, left.ToFloat(), top.ToFloat() + height, paint);

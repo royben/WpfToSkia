@@ -13,6 +13,7 @@ using WpfToSkia.SkiaElements;
 using WpfToSkia.ExtensionsMethods;
 using System.Windows.Input;
 using System.Diagnostics;
+using SkiaSharp.Tests;
 
 namespace WpfToSkia
 {
@@ -27,6 +28,7 @@ namespace WpfToSkia
         private FrameworkElement _mouseEnterElement;
         private bool _loaded;
         private ScrollViewer _scrollViewer;
+        private double max_bitmap_size = 4000 * 4000;
 
         public FrameworkElement Child
         {
@@ -83,7 +85,7 @@ namespace WpfToSkia
                 AddVisualChild(Child);
                 AddLogicalChild(Child);
 
-                Child.Loaded += (_, __) => 
+                Child.Loaded += (_, __) =>
                 {
                     InitCanvas();
                     _tree = WpfTreeHelper.LoadTree(Child);
@@ -116,10 +118,19 @@ namespace WpfToSkia
 
                     _scrollViewer.ScrollChanged += (x, xx) =>
                     {
-                        Invalidate();
+                        if (IsVirtualizing())
+                        {
+                            _image.Margin = new Thickness(0, _scrollViewer.VerticalOffset, 0, 0);
+                            Invalidate();
+                        }
                     };
                 };
             }
+        }
+
+        private bool IsVirtualizing()
+        {
+            return (ActualWidth * ActualHeight) > max_bitmap_size;
         }
 
         private void InitCanvas()
@@ -127,7 +138,7 @@ namespace WpfToSkia
             double renderWidth = ActualWidth;
             double renderHeight = ActualHeight;
 
-            if (_scrollViewer != null)
+            if (_scrollViewer != null && IsVirtualizing())
             {
                 renderWidth = _scrollViewer.ViewportWidth;
                 renderHeight = _scrollViewer.ViewportHeight;
@@ -157,6 +168,9 @@ namespace WpfToSkia
             _tree.Root.Render(new RenderPackage()
             {
                 Canvas = canvas,
+                Offset = _scrollViewer != null ? new Point(-_scrollViewer.HorizontalOffset, -_scrollViewer.VerticalOffset) : new Point(0, 0),
+                Viewport = IsVirtualizing() ? new Rect(_scrollViewer.HorizontalOffset, _scrollViewer.VerticalOffset, _scrollViewer.ViewportWidth, _scrollViewer.ViewportHeight) : new Rect(0, 0, ActualWidth, ActualHeight),
+
             });
 
             _bitmap.AddDirtyRect(new Int32Rect(0, 0, (int)_bitmap.Width, (int)_bitmap.Height));

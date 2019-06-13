@@ -28,11 +28,16 @@ namespace WpfToSkia
         {
             foreach (var child in Children)
             {
-                child.Render(new RenderPackage()
+                if (child.Bounds.IntersectsWith(package.Viewport))
                 {
-                    Canvas = package.Canvas,
-                    Opacity = Parent == null ? 1 : WpfElement.Opacity,
-                });
+                    child.Render(new RenderPackage()
+                    {
+                        Canvas = package.Canvas,
+                        Opacity = Parent == null ? 1 : WpfElement.Opacity,
+                        Offset = package.Offset,
+                        Viewport = package.Viewport,
+                    });
+                }
             }
         }
 
@@ -68,7 +73,7 @@ namespace WpfToSkia
 
                 if (_skia.Parent != null)
                 {
-                    _paint.ColorFilter = SKColorFilter.CreateBlendMode(SKColors.White.WithAlpha((byte)((package.Opacity * _element.Opacity) * 255d)), SKBlendMode.DstIn);
+                    //_paint.ColorFilter = SKColorFilter.CreateBlendMode(SKColors.White.WithAlpha((byte)((package.Opacity * _element.Opacity) * 255d)), SKBlendMode.DstIn);
                 }
 
                 if (_element.Effect is DropShadowEffect)
@@ -81,7 +86,7 @@ namespace WpfToSkia
             public SKPaintBuilder SetFill(Brush fill)
             {
                 _paint.Style = SKPaintStyle.Fill;
-                _paint.Shader = fill.ToSkiaShader(_element.ActualWidth, _element.ActualHeight);
+                _paint.Color = fill.ToSKColor();
                 return this;
             }
 
