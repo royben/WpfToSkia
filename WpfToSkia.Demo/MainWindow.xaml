@@ -6,7 +6,7 @@
         xmlns:skia="clr-namespace:WpfToSkia;assembly=WpfToSkia"
         xmlns:local="clr-namespace:WpfToSkia.Demo"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}" d:DataContext="{d:DesignInstance Type={x:Type local:MainWindow},IsDesignTimeCreatable=False}">
+        Title="MainWindow" Height="720" Width="1280" DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}" d:DataContext="{d:DesignInstance Type={x:Type local:MainWindow},IsDesignTimeCreatable=False}">
     <Grid Background="Transparent">
         <ScrollViewer HorizontalScrollBarVisibility="Visible">
             <Border>

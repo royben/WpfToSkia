@@ -14,7 +14,6 @@ namespace WpfToSkia
 {
     public class SkiaFrameworkElement
     {
-        public Rect Bounds { get; set; }
         public FrameworkElement WpfElement { get; set; }
         public List<SkiaFrameworkElement> Children { get; set; }
         public SkiaFrameworkElement Parent { get; set; }
@@ -24,26 +23,33 @@ namespace WpfToSkia
             Children = new List<SkiaFrameworkElement>();
         }
 
-        public virtual void Render(RenderPackage package)
+        public void Render(IDrawingContext context, Rect bounds, Rect viewport, double opacity)
         {
+            var viewportBounds = bounds;
+            viewportBounds.Offset(-viewport.Left, -viewport.Top);
+            OnRender(context, viewportBounds, opacity);
+
             foreach (var child in Children)
             {
-                if (child.Bounds.IntersectsWith(package.Viewport))
+                var childBounds = child.GetBounds();
+                childBounds.Offset(bounds.Left, bounds.Top);
+
+                if (childBounds.IntersectsWith(viewport))
                 {
-                    child.Render(new RenderPackage()
-                    {
-                        Canvas = package.Canvas,
-                        Opacity = Parent == null ? 1 : WpfElement.Opacity,
-                        Offset = package.Offset,
-                        Viewport = package.Viewport,
-                    });
+                    child.Render(context, childBounds, viewport, opacity * WpfElement.Opacity);
                 }
             }
         }
 
-        public virtual Size Measure(Size availableSize)
+        protected virtual void OnRender(IDrawingContext context, Rect bounds, double opacity)
         {
-            return availableSize;
+
+        }
+
+        protected virtual Rect GetBounds()
+        {
+            var offset = VisualTreeHelper.GetOffset(WpfElement);
+            return new Rect(offset.X, offset.Y, WpfElement.ActualWidth, WpfElement.ActualHeight);
         }
 
         public virtual List<BindingProperty> GetBindingProperties()
@@ -52,57 +58,6 @@ namespace WpfToSkia
             {
                  new BindingProperty(FrameworkElement.OpacityProperty,BindingPropertyMode.AffectsRender),
             };
-        }
-
-        protected class SKPaintBuilder
-        {
-            private SKPaint _paint;
-            private FrameworkElement _element;
-            private SkiaFrameworkElement _skia;
-            private RenderPackage _package;
-
-            public SKPaintBuilder(SkiaFrameworkElement skiaElement, RenderPackage package)
-            {
-                _paint = new SKPaint();
-                _skia = skiaElement;
-                _element = _skia.WpfElement;
-                _skia = skiaElement;
-                _package = package;
-
-                _paint.IsAntialias = RenderOptions.GetEdgeMode(_element) == EdgeMode.Aliased ? false : true;
-
-                if (_skia.Parent != null)
-                {
-                    //_paint.ColorFilter = SKColorFilter.CreateBlendMode(SKColors.White.WithAlpha((byte)((package.Opacity * _element.Opacity) * 255d)), SKBlendMode.DstIn);
-                }
-
-                if (_element.Effect is DropShadowEffect)
-                {
-                    var fx = _element.Effect as DropShadowEffect;
-                    _paint.ImageFilter = SKImageFilter.CreateDropShadow(fx.ShadowDepth.ToFloat(), fx.ShadowDepth.ToFloat(), fx.BlurRadius.ToFloat(), fx.BlurRadius.ToFloat(), fx.Color.ToSKColor(), SKDropShadowImageFilterShadowMode.DrawShadowAndForeground);
-                }
-            }
-
-            public SKPaintBuilder SetFill(Brush fill)
-            {
-                _paint.Style = SKPaintStyle.Fill;
-                _paint.Color = fill.ToSKColor();
-                return this;
-            }
-
-            public SKPaintBuilder SetStroke(Brush stroke, Thickness thickness)
-            {
-                _paint.Style = SKPaintStyle.Stroke;
-                _paint.Color = stroke.ToSKColor();
-                _paint.IsStroke = true;
-                _paint.StrokeWidth = thickness.Left.ToFloat();
-                return this;
-            }
-
-            public SKPaint Build()
-            {
-                return _paint;
-            }
         }
     }
 }

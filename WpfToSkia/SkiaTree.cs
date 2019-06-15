@@ -34,21 +34,21 @@ namespace WpfToSkia
             return list;
         }
 
-        public void InvalidateBounds()
-        {
-            InvalidateBoundsInternal(Root, new Vector(0, 0));
-        }
+        //public void InvalidateBounds()
+        //{
+        //    InvalidateBoundsInternal(Root, new Vector(0, 0));
+        //}
 
-        private void InvalidateBoundsInternal(SkiaFrameworkElement element, Vector offset)
-        {
-            var o = VisualTreeHelper.GetOffset(element.WpfElement);
-            var newoffset = new Vector(offset.X + o.X, offset.Y + o.Y);
-            element.Bounds = new Rect(newoffset.X, newoffset.Y, element.WpfElement.ActualWidth, element.WpfElement.ActualHeight);
+        //private void InvalidateBoundsInternal(SkiaFrameworkElement element, Vector offset)
+        //{
+        //    var o = VisualTreeHelper.GetOffset(element.WpfElement);
+        //    var newoffset = new Vector(offset.X + o.X, offset.Y + o.Y);
+        //    element.Bounds = new Rect(newoffset.X, newoffset.Y, element.WpfElement.ActualWidth, element.WpfElement.ActualHeight);
 
-            foreach (var item in element.Children)
-            {
-                InvalidateBoundsInternal(item, newoffset);
-            }
-        }
+        //    foreach (var item in element.Children)
+        //    {
+        //        InvalidateBoundsInternal(item, newoffset);
+        //    }
+        //}
     }
 }

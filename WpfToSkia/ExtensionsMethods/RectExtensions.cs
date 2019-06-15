@@ -21,6 +21,11 @@ namespace WpfToSkia.ExtensionsMethods
             return r;
         }
 
+        public static Rect CollapseStroke(this Rect rect, Thickness thickness)
+        {
+            return new Rect((rect.Left + thickness.Left / 2).ToFloat(), (rect.Top + thickness.Top / 2).ToFloat(), (rect.Right - thickness.Right / 2).ToFloat(), (rect.Bottom - thickness.Bottom / 2).ToFloat());
+        }
+
         public static SKRect ToSKRectClip(this Rect rect, Thickness thickness, double offsetX = 0, double offsetY = 0)
         {
             return new SKRect((rect.Left + thickness.Left + offsetX).ToFloat(), (rect.Top + thickness.Top + offsetY).ToFloat(), (rect.Right - thickness.Right + offsetX).ToFloat(), (rect.Bottom - thickness.Bottom + offsetY).ToFloat());
