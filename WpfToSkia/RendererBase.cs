@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -120,7 +121,8 @@ namespace WpfToSkia
                     {
                         if (ee.BindingProperty.Mode == BindingPropertyMode.AffectsRender)
                         {
-                            //InvalidatePartial(element.Bounds);
+                            RenderSingle(ee.SkiaElement);
+                            //Render();
                         }
                         else
                         {
@@ -172,12 +174,31 @@ namespace WpfToSkia
 
             context.BeginDrawing();
 
-            context.Clear(Colors.Transparent);
+            context.Clear(Colors.White);
             _tree.Root.Render(context, new Rect(0, 0, _host.ActualWidth, _host.ActualHeight), GetVirtualizedBounds(), 1);
 
             context.EndDrawing();
 
             _bitmap.AddDirtyRect(new Int32Rect(0, 0, (int)_bitmap.Width, (int)_bitmap.Height));
+            _bitmap.Unlock();
+        }
+
+        private void RenderSingle(SkiaFrameworkElement element)
+        {
+            var bounds = element.Bounds;
+
+            _bitmap.Lock();
+
+            T context = CreateDrawingContext();
+
+            context.BeginDrawing();
+
+            context.Clear(Colors.Transparent);
+            _tree.Root.Invalidate(context, bounds, 1);
+
+            context.EndDrawing();
+
+            _bitmap.AddDirtyRect(new Int32Rect((int)bounds.Left, (int)bounds.Top, (int)bounds.Width + 1, (int)bounds.Height + 1));
             _bitmap.Unlock();
         }
 

@@ -25,7 +25,7 @@ namespace WpfToSkia
 
         public bool HasOpacity
         {
-            get { return Opacity > 0 && Opacity < 1; }
+            get { return Opacity < 1; }
         }
     }
 }

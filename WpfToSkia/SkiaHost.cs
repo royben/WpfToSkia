@@ -58,21 +58,9 @@ namespace WpfToSkia
                 SkiaElementResolver.Default.RegisterBinder<Border, SkiaBorder>();
                 SkiaElementResolver.Default.RegisterBinder<StackPanel, SkiaStackPanel>();
                 SkiaElementResolver.Default.RegisterBinder<TextBlock, SkiaTextBlock>();
-
-                //this.SizeChanged += SkiaHost_SizeChanged;
             }
 
             Loaded += SkiaHost_Loaded;
-        }
-
-        private void SkiaHost_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            //if (!this.DesignMode() && _loaded)
-            //{
-            //    //_tree.InvalidateBounds();
-            //    InitCanvas();
-            //    Invalidate();
-            //}
         }
 
         private void SkiaHost_Loaded(object sender, RoutedEventArgs e)

@@ -35,7 +35,7 @@ namespace WpfToSkia.Demo
 
             Items = new ObservableCollection<DataItem>();
 
-            for (int i = 0; i < 10000; i++)
+            for (int i = 0; i < 100; i++)
             {
                 Items.Add(new DataItem()
                 {

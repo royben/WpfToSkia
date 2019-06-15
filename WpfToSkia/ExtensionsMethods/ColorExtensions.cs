@@ -14,5 +14,10 @@ namespace WpfToSkia.ExtensionsMethods
         {
             return new SKColor(color.R, color.G, color.B, color.A);
         }
+
+        public static System.Drawing.Color ToGdiColor(this Color color)
+        {
+            return System.Drawing.Color.FromArgb(color.A, color.R, color.G, color.B);
+        }
     }
 }

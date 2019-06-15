@@ -31,6 +31,22 @@
                                             <Border.Background>
                                                 <SolidColorBrush Color="{Binding Color}" />
                                             </Border.Background>
+                                            <Border.Triggers>
+                                                <EventTrigger RoutedEvent="MouseEnter">
+                                                    <BeginStoryboard>
+                                                        <Storyboard>
+                                                            <DoubleAnimation Storyboard.TargetProperty="Opacity" To="0" Duration="00:00:1"></DoubleAnimation>
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </EventTrigger>
+                                                <EventTrigger RoutedEvent="MouseLeave">
+                                                    <BeginStoryboard>
+                                                        <Storyboard>
+                                                            <DoubleAnimation Storyboard.TargetProperty="Opacity" To="1" Duration="00:00:1"></DoubleAnimation>
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </EventTrigger>
+                                            </Border.Triggers>
                                         </Border>
                                         <TextBlock VerticalAlignment="Center" Margin="10 0 0 0" Text="{Binding Name}"></TextBlock>
                                     </StackPanel>

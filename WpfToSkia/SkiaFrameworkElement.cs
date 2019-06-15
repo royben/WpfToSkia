@@ -17,6 +17,7 @@ namespace WpfToSkia
         public FrameworkElement WpfElement { get; set; }
         public List<SkiaFrameworkElement> Children { get; set; }
         public SkiaFrameworkElement Parent { get; set; }
+        public Rect Bounds { get; private set; }
 
         public SkiaFrameworkElement()
         {
@@ -27,6 +28,7 @@ namespace WpfToSkia
         {
             var viewportBounds = bounds;
             viewportBounds.Offset(-viewport.Left, -viewport.Top);
+            Bounds = viewportBounds;
             OnRender(context, viewportBounds, opacity);
 
             foreach (var child in Children)
@@ -36,7 +38,20 @@ namespace WpfToSkia
 
                 if (childBounds.IntersectsWith(viewport))
                 {
-                    child.Render(context, childBounds, viewport, opacity * WpfElement.Opacity);
+                    child.Render(context, childBounds, viewport, opacity * child.WpfElement.Opacity);
+                }
+            }
+        }
+
+        public void Invalidate(IDrawingContext context, Rect viewport, double opacity)
+        {
+            OnRender(context, Bounds, opacity);
+
+            foreach (var child in Children)
+            {
+                if (child.Bounds.IntersectsWith(viewport))
+                {
+                    child.Invalidate(context, viewport, opacity * child.WpfElement.Opacity);
                 }
             }
         }

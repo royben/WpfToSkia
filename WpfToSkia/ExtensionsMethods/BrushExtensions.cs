@@ -63,5 +63,47 @@ namespace WpfToSkia.ExtensionsMethods
                 throw new NotSupportedException($"Unsupported brush type {brush.GetType().Name}.");
             }
         }
+
+        public static System.Drawing.Brush ToGdiBrush(this Brush brush, double width, double height)
+        {
+            if (brush == null)
+            {
+                return null;
+            }
+            else if (brush is SolidColorBrush)
+            {
+                return new System.Drawing.SolidBrush((brush as SolidColorBrush).Color.ToGdiColor());
+            }
+            else if (brush is LinearGradientBrush)
+            {
+                var b = brush as LinearGradientBrush;
+
+                double angle = Math.Atan2(b.EndPoint.Y - b.StartPoint.Y, b.EndPoint.X - b.StartPoint.X) * 180 / Math.PI;
+
+                System.Drawing.Drawing2D.LinearGradientBrush gradient = new System.Drawing.Drawing2D.LinearGradientBrush(new System.Drawing.Rectangle(0, 0, width.ToInt32(), height.ToInt32()), System.Drawing.Color.Black, System.Drawing.Color.Black, (float)angle);
+
+                System.Drawing.Drawing2D.ColorBlend blend = new System.Drawing.Drawing2D.ColorBlend();
+
+                List<System.Drawing.Color> colors = new List<System.Drawing.Color>();
+                List<float> offsets = new List<float>();
+
+                foreach (var stop in b.GradientStops)
+                {
+                    colors.Add(stop.Color.ToGdiColor());
+                    offsets.Add((float)stop.Offset);
+                }
+
+                blend.Colors = colors.ToArray();
+                blend.Positions = offsets.ToArray();
+
+                gradient.InterpolationColors = blend;
+
+                return gradient;
+            }
+            else
+            {
+                throw new NotSupportedException($"Unsupported brush type {brush.GetType().Name}.");
+            }
+        }
     }
 }
