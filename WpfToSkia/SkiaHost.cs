@@ -16,6 +16,7 @@ using System.Diagnostics;
 using SkiaSharp.Tests;
 using WpfToSkia.DrawingContexts;
 using WpfToSkia.Renderers;
+using System.Windows.Shapes;
 
 namespace WpfToSkia
 {
@@ -58,6 +59,8 @@ namespace WpfToSkia
                 SkiaElementResolver.Default.RegisterBinder<Border, SkiaBorder>();
                 SkiaElementResolver.Default.RegisterBinder<StackPanel, SkiaStackPanel>();
                 SkiaElementResolver.Default.RegisterBinder<TextBlock, SkiaTextBlock>();
+                SkiaElementResolver.Default.RegisterBinder<ItemsControl, SkiaItemsControl>();
+                SkiaElementResolver.Default.RegisterBinder<Rectangle, SkiaRectangle>();
             }
 
             Loaded += SkiaHost_Loaded;
@@ -88,13 +91,16 @@ namespace WpfToSkia
                     _image.Source = Renderer.Source;
                     _loaded = true;
 
-                    _scrollViewer.ScrollChanged += (x, xx) =>
+                    if (_scrollViewer != null)
                     {
-                        if (Renderer.IsVirtualizing)
+                        _scrollViewer.ScrollChanged += (x, xx) =>
                         {
-                            _image.Margin = new Thickness(_scrollViewer.HorizontalOffset, _scrollViewer.VerticalOffset, 0, 0);
-                        }
-                    };
+                            if (Renderer.IsVirtualizing)
+                            {
+                                _image.Margin = new Thickness(_scrollViewer.HorizontalOffset, _scrollViewer.VerticalOffset, 0, 0);
+                            }
+                        };
+                    }
                 };
             }
         }

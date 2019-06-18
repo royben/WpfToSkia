@@ -1,6 +1,7 @@
 ﻿using SkiaSharp;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,10 +15,18 @@ namespace WpfToSkia
 {
     public class SkiaFrameworkElement
     {
-        public FrameworkElement WpfElement { get; set; }
+        private FrameworkElement _wpfElement;
+        public FrameworkElement WpfElement
+        {
+            get { return _wpfElement; }
+            set { _wpfElement = value; OnWpfFrameworkElementChanged(value); }
+        }
+
         public List<SkiaFrameworkElement> Children { get; set; }
         public SkiaFrameworkElement Parent { get; set; }
         public Rect Bounds { get; private set; }
+        public event EventHandler<FrameworkElement> ChildAdded;
+        public event EventHandler<FrameworkElement> ChildRemoved;
 
         public SkiaFrameworkElement()
         {
@@ -40,6 +49,11 @@ namespace WpfToSkia
                 {
                     child.Render(context, childBounds, viewport, opacity * child.WpfElement.Opacity);
                 }
+                else
+                {
+                    childBounds.Offset(-viewport.Left, -viewport.Top);
+                    child.Bounds = childBounds;
+                }
             }
         }
 
@@ -56,6 +70,28 @@ namespace WpfToSkia
             }
         }
 
+        public void InvalidateBounds()
+        {
+            InvalidateBounds(Parent);
+        }
+
+        private void InvalidateBounds(SkiaFrameworkElement parent)
+        {
+            Bounds = GetBounds();
+            var bounds = Bounds;
+
+            if (parent != null)
+            {
+                bounds.Offset(parent.Bounds.Left, parent.Bounds.Top);
+                Bounds = bounds;
+            }
+
+            foreach (var child in Children)
+            {
+                child.InvalidateBounds(this);
+            }
+        }
+
         protected virtual void OnRender(IDrawingContext context, Rect bounds, double opacity)
         {
 
@@ -64,7 +100,7 @@ namespace WpfToSkia
         protected virtual Rect GetBounds()
         {
             var offset = VisualTreeHelper.GetOffset(WpfElement);
-            return new Rect(offset.X, offset.Y, WpfElement.ActualWidth, WpfElement.ActualHeight);
+            return new Rect(offset.X, offset.Y, WpfElement.Width.NaNDefault(WpfElement.ActualWidth), WpfElement.Height.NaNDefault(WpfElement.ActualHeight));
         }
 
         public virtual List<BindingProperty> GetBindingProperties()
@@ -72,7 +108,24 @@ namespace WpfToSkia
             return new List<BindingProperty>()
             {
                  new BindingProperty(FrameworkElement.OpacityProperty,BindingPropertyMode.AffectsRender),
+                 new BindingProperty(FrameworkElement.WidthProperty,BindingPropertyMode.AffectsLayout),
+                 new BindingProperty(FrameworkElement.HeightProperty,BindingPropertyMode.AffectsLayout),
             };
+        }
+
+        protected virtual void OnWpfFrameworkElementChanged(FrameworkElement element)
+        {
+
+        }
+
+        protected void NotifyChildAdded(FrameworkElement element)
+        {
+            ChildAdded?.Invoke(this,element);
+        }
+
+        protected void NotifyChildRemoved(FrameworkElement element)
+        {
+            ChildRemoved?.Invoke(this, element);
         }
     }
 }

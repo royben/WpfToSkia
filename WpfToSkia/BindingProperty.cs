@@ -13,9 +13,11 @@ namespace WpfToSkia
 
         public BindingPropertyMode Mode { get; set; }
 
+        public Guid Guid { get; set; }
+
         public BindingProperty()
         {
-
+            Guid = Guid.NewGuid();
         }
 
         public BindingProperty(DependencyProperty dp, BindingPropertyMode mode) : this()

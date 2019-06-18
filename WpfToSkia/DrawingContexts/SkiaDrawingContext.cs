@@ -25,6 +25,7 @@ namespace WpfToSkia.DrawingContexts
         public void BeginDrawing()
         {
             _drawings = new List<Action>();
+            _canvas.Save();
         }
 
         public void Clear(Color color)
@@ -183,6 +184,8 @@ namespace WpfToSkia.DrawingContexts
             }
 
             _drawings.Clear();
+
+            _canvas.Restore();
         }
 
         private void AddDrawingAction(Action drawingAction)

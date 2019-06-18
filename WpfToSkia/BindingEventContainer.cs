@@ -49,6 +49,7 @@ namespace WpfToSkia
             binding.Mode = BindingMode.OneWay;
             binding.Source = skiaElement.WpfElement;
             binding.Path = new PropertyPath(bindingProperty.DependencyProperty);
+            binding.IsAsync = true;
             BindingOperations.SetBinding(container, BindingEventContainer.ValueProperty, binding);
 
             return container;

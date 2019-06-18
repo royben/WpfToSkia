@@ -34,21 +34,45 @@ namespace WpfToSkia
             return list;
         }
 
-        //public void InvalidateBounds()
-        //{
-        //    InvalidateBoundsInternal(Root, new Vector(0, 0));
-        //}
+        private SkiaFrameworkElement Find(Func<SkiaFrameworkElement, bool> predicate)
+        {
+            return Find(Root, predicate);
+        }
 
-        //private void InvalidateBoundsInternal(SkiaFrameworkElement element, Vector offset)
-        //{
-        //    var o = VisualTreeHelper.GetOffset(element.WpfElement);
-        //    var newoffset = new Vector(offset.X + o.X, offset.Y + o.Y);
-        //    element.Bounds = new Rect(newoffset.X, newoffset.Y, element.WpfElement.ActualWidth, element.WpfElement.ActualHeight);
+        private SkiaFrameworkElement Find(SkiaFrameworkElement element, Func<SkiaFrameworkElement, bool> predicate)
+        {
+            if (predicate(element))
+            {
+                return element;
+            }
 
-        //    foreach (var item in element.Children)
-        //    {
-        //        InvalidateBoundsInternal(item, newoffset);
-        //    }
-        //}
+            foreach (var item in element.Children)
+            {
+                var result = Find(item, predicate);
+                if (result != null)
+                {
+                    return result;
+                }
+            }
+
+            return null;
+        }
+
+        public SkiaFrameworkElement Inject(FrameworkElement element)
+        {
+            var parent = VisualTreeHelper.GetParent(element);
+            var treeParent = Find(x => x.WpfElement == parent);
+            var elementTree = SkiaTreeHelper.LoadTree(element);
+            elementTree.Root.Parent = treeParent;
+            treeParent.Children.Add(elementTree.Root);
+            return elementTree.Root;
+        }
+
+        public SkiaFrameworkElement Eject(FrameworkElement element)
+        {
+            var skiaElement = Find(x => x.WpfElement == element);
+            skiaElement.Parent.Children.Remove(skiaElement);
+            return skiaElement;
+        }
     }
 }

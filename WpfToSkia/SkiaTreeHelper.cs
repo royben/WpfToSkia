@@ -8,7 +8,7 @@ using System.Windows.Media;
 
 namespace WpfToSkia
 {
-    public static class WpfTreeHelper
+    public static class SkiaTreeHelper
     {
         public static SkiaTree LoadTree(FrameworkElement root)
         {

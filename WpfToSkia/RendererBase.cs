@@ -29,6 +29,10 @@ namespace WpfToSkia
         private SkiaTree _tree;
         private List<BindingEventContainer> _containers;
         private ProducerConsumerQueue<RenderQueueItem> _renderThreadQueue;
+        private ActionThrottle _scrolling_throttle;
+        private ActionThrottle _sizing_throttle;
+        private ActionThrottle _tree_change_throttle;
+        private Dictionary<BindingProperty, ActionThrottle> _bindingThrottlers;
 
         public event EventHandler<WriteableBitmap> SourceChanged;
 
@@ -39,20 +43,37 @@ namespace WpfToSkia
 
         public bool IsVirtualizing
         {
-            get { return _host.ActualWidth * _host.ActualHeight > MaximumBitmapSize; }
+            get { return _host.ActualWidth * _host.ActualHeight > MaximumBitmapSize && _scrollViewer != null; }
         }
 
         public int MaximumBitmapSize { get; set; }
 
+        public double BindingFPS { get; set; }
+
+        public double ScrollingFPS { get; set; }
+
+        public double SizingFPS { get; set; }
+
+        public bool EnableBinding { get; set; }
+
         public RendererBase()
         {
             _renderThreadQueue = new ProducerConsumerQueue<RenderQueueItem>();
-            MaximumBitmapSize = 4000 * 4000;
+            _bindingThrottlers = new Dictionary<BindingProperty, ActionThrottle>();
+            MaximumBitmapSize = 100;
+            BindingFPS = 30;
+            ScrollingFPS = 30;
+            SizingFPS = 30;
         }
 
         public void Init(SkiaHost host)
         {
             _host = host;
+
+            _scrolling_throttle = new ActionThrottle(TimeSpan.FromMilliseconds(1000d / ScrollingFPS), _host.Dispatcher);
+            _sizing_throttle = new ActionThrottle(TimeSpan.FromMilliseconds(1000d / SizingFPS), _host.Dispatcher);
+            _tree_change_throttle = new ActionThrottle(TimeSpan.FromMilliseconds(1000d / 30), _host.Dispatcher);
+
             _host.SizeChanged += _host_SizeChanged;
             _scrollViewer = _host.FindAncestor<ScrollViewer>();
 
@@ -79,13 +100,21 @@ namespace WpfToSkia
         {
             if (IsVirtualizing)
             {
-                InitSurface();
+                _sizing_throttle.ResetReplace(() =>
+                {
+                    InitSurface();
+                    Render();
+                });
             }
         }
 
         private void _host_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            InitSurface();
+            _sizing_throttle.ResetReplace(() =>
+            {
+                InitSurface();
+                Render();
+            });
         }
 
         private void RenderThreadMethod()
@@ -101,39 +130,83 @@ namespace WpfToSkia
 
         private void _scrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-            if (IsVirtualizing)
+            _scrolling_throttle.ResetReplace(() =>
             {
-                Render();
-            }
+                if (IsVirtualizing)
+                {
+                    Render();
+                }
+            });
         }
 
         protected void ReloadVisualTree()
         {
-            _tree = WpfTreeHelper.LoadTree(_host.Child);
+            _tree = SkiaTreeHelper.LoadTree(_host.Child);
             _containers = new List<BindingEventContainer>();
 
+            _bindingThrottlers.ToList().ForEach(x => x.Value.Dispose());
+            _bindingThrottlers.Clear();
+
             foreach (var element in _tree.Flatten())
+            {
+                InitElement(element);
+            }
+        }
+
+        private void Element_ChildAdded(object sender, FrameworkElement element)
+        {
+            var skiaElement = _tree.Inject(element);
+            InitElement(skiaElement);
+
+            _tree_change_throttle.ResetReplace(() =>
+            {
+                Render();
+            });
+        }
+
+        private void Element_ChildRemoved(object sender, FrameworkElement element)
+        {
+            var skiaElement = _tree.Eject(element);
+            DisposeElement(skiaElement);
+
+            _tree_change_throttle.ResetReplace(() =>
+            {
+                Render();
+            });
+        }
+
+        private void InitElement(SkiaFrameworkElement element)
+        {
+            if (EnableBinding)
             {
                 foreach (var bindingProperty in element.GetBindingProperties())
                 {
                     var container = BindingEventContainer.Generate(element, bindingProperty);
-                    container.ValueChanged += (x, ee) =>
-                    {
-                        if (ee.BindingProperty.Mode == BindingPropertyMode.AffectsRender)
-                        {
-                            RenderSingle(ee.SkiaElement);
-                            //Render();
-                        }
-                        else
-                        {
-                            //_tree.InvalidateBounds();
-                            //Invalidate();
-                        }
-                    };
-
+                    container.ValueChanged += OnBindingContainerValueChanged;
                     _containers.Add(container);
+
+                    _bindingThrottlers.Add(container.BindingProperty, new ActionThrottle(TimeSpan.FromMilliseconds(1000d / BindingFPS), _host.Dispatcher));
                 }
             }
+
+            element.ChildAdded += Element_ChildAdded;
+            element.ChildRemoved += Element_ChildRemoved;
+        }
+
+        private void DisposeElement(SkiaFrameworkElement element)
+        {
+            element.ChildAdded -= Element_ChildAdded;
+            element.ChildRemoved -= Element_ChildRemoved;
+        }
+
+        private void OnBindingContainerValueChanged(object sender, BindingEventArgs e)
+        {
+            var throttle = _bindingThrottlers[e.BindingProperty];
+
+            throttle.ResetReplace(() =>
+            {
+                RenderSingle(e.SkiaElement, e.BindingProperty.Mode);
+            });
         }
 
         private void InitSurface()
@@ -158,8 +231,6 @@ namespace WpfToSkia
 
             _bitmap.AddDirtyRect(new Int32Rect(0, 0, width, height));
             _bitmap.Unlock();
-
-            OnSourceChanged();
         }
 
         protected abstract void OnSurfaceCreated(IntPtr backBuffer, int width, int height, int stride);
@@ -174,32 +245,64 @@ namespace WpfToSkia
 
             context.BeginDrawing();
 
-            context.Clear(Colors.White);
+            context.Clear(Colors.Transparent);
             _tree.Root.Render(context, new Rect(0, 0, _host.ActualWidth, _host.ActualHeight), GetVirtualizedBounds(), 1);
 
             context.EndDrawing();
 
             _bitmap.AddDirtyRect(new Int32Rect(0, 0, (int)_bitmap.Width, (int)_bitmap.Height));
             _bitmap.Unlock();
+
+            OnSourceChanged();
         }
 
-        private void RenderSingle(SkiaFrameworkElement element)
+        private void RenderSingle(SkiaFrameworkElement element, BindingPropertyMode mode)
         {
-            var bounds = element.Bounds;
+            var bounds = element.Parent.Bounds;
 
-            _bitmap.Lock();
+            if (mode == BindingPropertyMode.AffectsLayout)
+            {
+                element.Parent.InvalidateBounds();
 
-            T context = CreateDrawingContext();
+                if (element.Parent.Bounds.Contains(bounds))
+                {
+                    bounds = element.Parent.Bounds;
+                }
+                else
+                {
+                    bounds.Width += 1;
+                    bounds.Height += 1;
+                }
+            }
 
-            context.BeginDrawing();
+            if (bounds.Left < _bitmap.Width && bounds.Top < _bitmap.Height)
+            {
+                _bitmap.Lock();
 
-            context.Clear(Colors.Transparent);
-            _tree.Root.Invalidate(context, bounds, 1);
+                T context = CreateDrawingContext();
 
-            context.EndDrawing();
+                context.BeginDrawing();
 
-            _bitmap.AddDirtyRect(new Int32Rect((int)bounds.Left, (int)bounds.Top, (int)bounds.Width + 1, (int)bounds.Height + 1));
-            _bitmap.Unlock();
+                context.ClipRect(bounds, new CornerRadius());
+                context.Clear(Colors.Transparent);
+
+                _tree.Root.Invalidate(context, bounds, 1);
+
+                context.EndDrawing();
+
+                if (bounds.Right > _bitmap.Width)
+                {
+                    bounds.Width = _bitmap.Width - bounds.Left;
+                }
+
+                if (bounds.Bottom > _bitmap.Height)
+                {
+                    bounds.Height = _bitmap.Height - bounds.Top;
+                }
+
+                _bitmap.AddDirtyRect(new Int32Rect((int)Math.Max(bounds.Left, 0), (int)Math.Max(bounds.Top, 0), (int)bounds.Width, (int)bounds.Height));
+                _bitmap.Unlock();
+            }
         }
 
         protected Task InvokeRenderThread(Action action)
@@ -217,7 +320,7 @@ namespace WpfToSkia
 
         private Rect GetVirtualizedBounds()
         {
-            return IsVirtualizing ? new Rect(_scrollViewer.HorizontalOffset, _scrollViewer.VerticalOffset, _scrollViewer.ViewportWidth, _scrollViewer.ViewportHeight) : new Rect(0, 0, _host.ActualWidth, _host.ActualHeight);
+            return IsVirtualizing ? new Rect((int)_scrollViewer.HorizontalOffset, (int)_scrollViewer.VerticalOffset, (int)_scrollViewer.ViewportWidth, (int)_scrollViewer.ViewportHeight) : new Rect(0, 0, _host.ActualWidth, _host.ActualHeight);
         }
 
         protected virtual void OnSourceChanged()

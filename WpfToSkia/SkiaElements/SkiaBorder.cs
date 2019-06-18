@@ -35,5 +35,12 @@ namespace WpfToSkia.SkiaElements
                 context.ClipRect(bounds, border.CornerRadius);
             }
         }
+
+        public override List<BindingProperty> GetBindingProperties()
+        {
+            var props = base.GetBindingProperties();
+            props.Add(new BindingProperty(Border.BackgroundProperty, BindingPropertyMode.AffectsRender));
+            return props;
+        }
     }
 }

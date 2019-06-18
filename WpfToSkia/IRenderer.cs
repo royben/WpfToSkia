@@ -14,6 +14,10 @@ namespace WpfToSkia
         WriteableBitmap Source { get; }
         bool IsVirtualizing { get; }
         int MaximumBitmapSize { get; set; }
+        double BindingFPS { get; set; }
+        double ScrollingFPS { get; set; }
+        double SizingFPS { get; set; }
+        bool EnableBinding { get; set; }
         void Init(SkiaHost host);
     }
 }
