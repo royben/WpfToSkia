@@ -56,14 +56,38 @@ namespace WpfToSkia
 
         public bool EnableBinding { get; set; }
 
+        /// <summary>
+        /// Gets or sets the framework element data item.
+        /// </summary>
+        public static readonly DependencyProperty IsInitializedProperty = DependencyProperty.RegisterAttached("IsInitialized", typeof(bool), typeof(RendererBase<T>), new FrameworkPropertyMetadata(false));
+        /// <summary>
+        /// Sets the IsInitialized attached property.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <param name="value">if set to <c>true</c> [value].</param>
+        public static void SetIsInitialized(SkiaFrameworkElement element, bool value)
+        {
+            element.SetValue(IsInitializedProperty, value);
+        }
+        /// <summary>
+        /// Gets the IsInitialized attached property.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <returns></returns>
+        public static bool GetIsInitialized(SkiaFrameworkElement element)
+        {
+            return (bool)element.GetValue(IsInitializedProperty);
+        }
+
         public RendererBase()
         {
             _renderThreadQueue = new ProducerConsumerQueue<RenderQueueItem>();
             _bindingThrottlers = new Dictionary<BindingProperty, ActionThrottle>();
-            MaximumBitmapSize = 100;
+            MaximumBitmapSize = 4000 * 4000;
             BindingFPS = 30;
             ScrollingFPS = 30;
             SizingFPS = 30;
+            EnableBinding = true;
         }
 
         public void Init(SkiaHost host)
@@ -147,10 +171,7 @@ namespace WpfToSkia
             _bindingThrottlers.ToList().ForEach(x => x.Value.Dispose());
             _bindingThrottlers.Clear();
 
-            foreach (var element in _tree.Flatten())
-            {
-                InitElement(element);
-            }
+            InitElement(_tree.Root);
         }
 
         private void Element_ChildAdded(object sender, FrameworkElement element)
@@ -167,7 +188,11 @@ namespace WpfToSkia
         private void Element_ChildRemoved(object sender, FrameworkElement element)
         {
             var skiaElement = _tree.Eject(element);
-            DisposeElement(skiaElement);
+
+            if (skiaElement != null)
+            {
+                DisposeElement(skiaElement);
+            }
 
             _tree_change_throttle.ResetReplace(() =>
             {
@@ -177,20 +202,30 @@ namespace WpfToSkia
 
         private void InitElement(SkiaFrameworkElement element)
         {
-            if (EnableBinding)
+            if (!GetIsInitialized(element))
             {
-                foreach (var bindingProperty in element.GetBindingProperties())
+                if (EnableBinding)
                 {
-                    var container = BindingEventContainer.Generate(element, bindingProperty);
-                    container.ValueChanged += OnBindingContainerValueChanged;
-                    _containers.Add(container);
+                    foreach (var bindingProperty in element.GetBindingProperties())
+                    {
+                        var container = BindingEventContainer.Generate(element, bindingProperty);
+                        container.ValueChanged += OnBindingContainerValueChanged;
+                        _containers.Add(container);
 
-                    _bindingThrottlers.Add(container.BindingProperty, new ActionThrottle(TimeSpan.FromMilliseconds(1000d / BindingFPS), _host.Dispatcher));
+                        _bindingThrottlers.Add(container.BindingProperty, new ActionThrottle(TimeSpan.FromMilliseconds(1000d / BindingFPS), _host.Dispatcher));
+                    }
                 }
+
+                element.ChildAdded += Element_ChildAdded;
+                element.ChildRemoved += Element_ChildRemoved;
+
+                SetIsInitialized(element, true);
             }
 
-            element.ChildAdded += Element_ChildAdded;
-            element.ChildRemoved += Element_ChildRemoved;
+            foreach (var child in element.Children)
+            {
+                InitElement(child);
+            }
         }
 
         private void DisposeElement(SkiaFrameworkElement element)
@@ -201,12 +236,16 @@ namespace WpfToSkia
 
         private void OnBindingContainerValueChanged(object sender, BindingEventArgs e)
         {
-            var throttle = _bindingThrottlers[e.BindingProperty];
+            ActionThrottle throttle = null;
 
-            throttle.ResetReplace(() =>
+            if (_bindingThrottlers.TryGetValue(e.BindingProperty, out throttle))
             {
-                RenderSingle(e.SkiaElement, e.BindingProperty.Mode);
-            });
+
+                throttle.ResetReplace(() =>
+                {
+                    RenderSingle(e.SkiaElement, e.BindingProperty.Mode);
+                });
+            }
         }
 
         private void InitSurface()
@@ -220,7 +259,7 @@ namespace WpfToSkia
                 renderHeight = _scrollViewer.ViewportHeight;
             }
 
-            _bitmap = new WriteableBitmap((int)renderWidth, (int)renderHeight, 96, 96, PixelFormats.Bgra32, BitmapPalettes.Halftone256Transparent);
+            _bitmap = new WriteableBitmap((int)Math.Max(renderWidth, 1), (int)Math.Max(renderHeight, 1), 96, 96, PixelFormats.Bgra32, BitmapPalettes.Halftone256Transparent);
 
             int width = (int)_bitmap.Width;
             int height = (int)_bitmap.Height;
@@ -258,15 +297,17 @@ namespace WpfToSkia
 
         private void RenderSingle(SkiaFrameworkElement element, BindingPropertyMode mode)
         {
-            var bounds = element.Parent.Bounds;
+            SkiaFrameworkElement toRender = element.Parent != null ? element.Parent : element;
+
+            var bounds = toRender.Bounds;
 
             if (mode == BindingPropertyMode.AffectsLayout)
             {
-                element.Parent.InvalidateBounds();
+                toRender.InvalidateBounds();
 
-                if (element.Parent.Bounds.Contains(bounds))
+                if (toRender.Bounds.Contains(bounds))
                 {
-                    bounds = element.Parent.Bounds;
+                    bounds = toRender.Bounds;
                 }
                 else
                 {

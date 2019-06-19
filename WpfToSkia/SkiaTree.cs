@@ -62,17 +62,33 @@ namespace WpfToSkia
         {
             var parent = VisualTreeHelper.GetParent(element);
             var treeParent = Find(x => x.WpfElement == parent);
-            var elementTree = SkiaTreeHelper.LoadTree(element);
-            elementTree.Root.Parent = treeParent;
-            treeParent.Children.Add(elementTree.Root);
-            return elementTree.Root;
+            var existing = treeParent.Children.FirstOrDefault(x => x.WpfElement == element);
+
+            if (existing == null)
+            {
+                var elementTree = SkiaTreeHelper.LoadTree(element);
+                elementTree.Root.Parent = treeParent;
+                treeParent.Children.Add(elementTree.Root);
+
+                return elementTree.Root;
+            }
+            else
+            {
+                return existing;
+            }
         }
 
         public SkiaFrameworkElement Eject(FrameworkElement element)
         {
             var skiaElement = Find(x => x.WpfElement == element);
-            skiaElement.Parent.Children.Remove(skiaElement);
-            return skiaElement;
+
+            if (skiaElement != null)
+            {
+                skiaElement.Parent.Children.Remove(skiaElement);
+                return skiaElement;
+            }
+
+            return null;
         }
     }
 }

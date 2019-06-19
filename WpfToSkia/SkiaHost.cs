@@ -25,7 +25,7 @@ namespace WpfToSkia
     {
         private WriteableBitmap _bitmap;
         private Image _image;
-        private bool _loaded;
+        private bool _host_loaded;
         private ScrollViewer _scrollViewer;
 
         public FrameworkElement Child
@@ -46,6 +46,9 @@ namespace WpfToSkia
 
         public SkiaHost()
         {
+            Focusable = false;
+            FocusVisualStyle = null;
+
             Renderer = new SkiaRenderer();
 
             _image = new Image() { Stretch = Stretch.None, HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Top };
@@ -61,6 +64,7 @@ namespace WpfToSkia
                 SkiaElementResolver.Default.RegisterBinder<TextBlock, SkiaTextBlock>();
                 SkiaElementResolver.Default.RegisterBinder<ItemsControl, SkiaItemsControl>();
                 SkiaElementResolver.Default.RegisterBinder<Rectangle, SkiaRectangle>();
+                SkiaElementResolver.Default.RegisterBinder<ScrollViewer, SkiaScrollViewer>();
             }
 
             Loaded += SkiaHost_Loaded;
@@ -68,6 +72,8 @@ namespace WpfToSkia
 
         private void SkiaHost_Loaded(object sender, RoutedEventArgs e)
         {
+            if (_host_loaded || this.ActualWidth == 0 || this.ActualHeight == 0) return;
+
             if (this.DesignMode())
             {
                 AddVisualChild(Child);
@@ -76,7 +82,6 @@ namespace WpfToSkia
             else
             {
                 _scrollViewer = this.FindAncestor<ScrollViewer>();
-
                 Child.Opacity = 0;
                 AddVisualChild(Child);
                 AddLogicalChild(Child);
@@ -89,7 +94,7 @@ namespace WpfToSkia
                         _image.Source = Renderer.Source;
                     };
                     _image.Source = Renderer.Source;
-                    _loaded = true;
+                    _host_loaded = true;
 
                     if (_scrollViewer != null)
                     {
@@ -102,6 +107,8 @@ namespace WpfToSkia
                         };
                     }
                 };
+
+                _host_loaded = true;
             }
         }
 

@@ -11,11 +11,38 @@ namespace WpfToSkia.SkiaElements
 {
     public class SkiaItemsControl : SkiaFrameworkElement
     {
-        private HashSet<Object> _elements;
+        private HashSet<int> _elements;
+
+        /// <summary>
+        /// Gets or sets the framework element data item.
+        /// </summary>
+        public static readonly DependencyProperty DataItemProperty =
+            DependencyProperty.RegisterAttached("DataItem",
+            typeof(object), typeof(SkiaItemsControl),
+            new FrameworkPropertyMetadata(null));
+        /// <summary>
+        /// Sets the DataItem attached property.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <param name="value">if set to <c>true</c> [value].</param>
+        public static void SetDataItem(FrameworkElement element, object value)
+        {
+            element.SetValue(DataItemProperty, value);
+        }
+
+        /// <summary>
+        /// Gets the DataItem attached property.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <returns></returns>
+        public static object GetDataItem(FrameworkElement element)
+        {
+            return element.GetValue(DataItemProperty);
+        }
 
         public SkiaItemsControl() : base()
         {
-            _elements = new HashSet<object>();
+            _elements = new HashSet<int>();
         }
 
         public override List<BindingProperty> GetBindingProperties()
@@ -41,7 +68,7 @@ namespace WpfToSkia.SkiaElements
             {
                 for (int i = 0; i < control.Items.Count; i++)
                 {
-                    if (!_elements.Contains(control.Items[i]))
+                    if (!_elements.Contains(i))
                     {
                         FrameworkElement element = control.ItemContainerGenerator.ContainerFromIndex(i) as FrameworkElement;
 
@@ -51,7 +78,8 @@ namespace WpfToSkia.SkiaElements
                             element.Loaded += Element_Loaded;
                             element.Unloaded -= Element_Unloaded;
                             element.Unloaded += Element_Unloaded;
-                            _elements.Add(control.Items[i]);
+                            SetDataItem(element, i);
+                            _elements.Add(i);
 
                             if (element.IsLoaded)
                             {
@@ -69,8 +97,7 @@ namespace WpfToSkia.SkiaElements
             element.Loaded -= Element_Loaded;
             element.Unloaded -= Element_Unloaded;
             NotifyChildRemoved(element);
-            _elements.Remove(element);
-            _elements.Remove(element.DataContext);
+            _elements.Remove((int)GetDataItem(element));
         }
 
         private void Element_Loaded(object sender, RoutedEventArgs e)

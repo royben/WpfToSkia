@@ -8,102 +8,163 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="720" Width="1280" DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}" d:DataContext="{d:DesignInstance Type={x:Type local:MainWindow},IsDesignTimeCreatable=False}">
     <Grid Background="Transparent">
-        <DockPanel>
-            <StackPanel DockPanel.Dock="Right">
-                <Button Width="100" VerticalAlignment="Top" Click="Button_Click">ADD</Button>
-                <Button Width="100" VerticalAlignment="Top" Click="Button_Click_1">REMOVE</Button>
-            </StackPanel>
-            <!--<ScrollViewer HorizontalScrollBarVisibility="Visible" CanContentScroll="True">-->
-                <!--<Border>-->
-                    <skia:SkiaHost>
-                    <!--<Border Background="#9191C9" BorderBrush="Red" VerticalAlignment="Stretch">-->
-                        <!--<Canvas>
-                            <Border Width="50" Height="50" Background="Red" Canvas.Left="10" Canvas.Top="10" x:Name="border1" MouseEnter="Border1_MouseEnter" MouseLeave="Border1_MouseLeave"></Border>
-                            <Border Width="50" Height="50" Background="Green" Canvas.Left="61" Canvas.Top="10" x:Name="border2" MouseEnter="Border2_MouseEnter" MouseLeave="Border2_MouseLeave"></Border>
-                        </Canvas>-->
+        <TabControl>
+            <TabItem Header="None">
 
-                <ItemsControl
-    VirtualizingStackPanel.IsVirtualizing="True"
-  
-    ScrollViewer.CanContentScroll="True"
-    ItemsSource="{Binding Items}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal" Margin="10">
-                                <Border Width="50" Height="50">
-                                    <Border.Background>
-                                        <SolidColorBrush Color="{Binding Color}" />
-                                    </Border.Background>
-                                    <Border.Triggers>
-                                        <EventTrigger RoutedEvent="MouseEnter">
-                                            <BeginStoryboard>
-                                                <Storyboard>
-                                                    <DoubleAnimation Storyboard.TargetProperty="Width" To="100" Duration="00:00:01"></DoubleAnimation>
-                                                </Storyboard>
-                                            </BeginStoryboard>
-                                        </EventTrigger>
-                                        <EventTrigger RoutedEvent="MouseLeave">
-                                            <BeginStoryboard>
-                                                <Storyboard>
-                                                    <DoubleAnimation Storyboard.TargetProperty="Width" To="50" Duration="00:00:01"></DoubleAnimation>
-                                                </Storyboard>
-                                            </BeginStoryboard>
-                                        </EventTrigger>
-                                    </Border.Triggers>
-                                </Border>
-                                <TextBlock VerticalAlignment="Center" Margin="10 0 0 0" Text="{Binding Name}"></TextBlock>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <VirtualizingStackPanel />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.Template>
-                        <ControlTemplate>
-                            <Border
-            BorderThickness="{TemplateBinding Border.BorderThickness}"
-            Padding="{TemplateBinding Control.Padding}"
-            BorderBrush="{TemplateBinding Border.BorderBrush}"
-            Background="{TemplateBinding Panel.Background}"
-            SnapsToDevicePixels="True">
-                                <ScrollViewer
-                    Padding="{TemplateBinding Control.Padding}"
-                    Focusable="False">
-                                    <ItemsPresenter
-                        SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
-                                </ScrollViewer>
-                            </Border>
-                        </ControlTemplate>
-                    </ItemsControl.Template>
-                </ItemsControl>
-                
-                        <!--<Border Background="Blue" BorderBrush="White" BorderThickness="2" Margin="40" CornerRadius="20">
-                    <Border x:Name="border" Background="White" Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Height="100" BorderThickness="10" BorderBrush="Black">
-                        <Border.Triggers>
-                            <EventTrigger RoutedEvent="MouseEnter">
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" To="0" Duration="00:00:1"></DoubleAnimation>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </EventTrigger>
-                            <EventTrigger RoutedEvent="MouseLeave">
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" To="1" Duration="00:00:1"></DoubleAnimation>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </EventTrigger>
-                        </Border.Triggers>
-                        <TextBlock HorizontalAlignment="Center" Opacity="0.5" Foreground="Black" FontWeight="Bold" FontSize="16" VerticalAlignment="Center">Roy Ben Shabat</TextBlock>
-                    </Border>
-                </Border>-->
-                    <!--</Border>-->
+            </TabItem>
+            <TabItem Header="Virtualized Items Source 1">
+                <DockPanel>
+                    <TextBlock Margin="10" DockPanel.Dock="Top" HorizontalAlignment="Left" TextWrapping="Wrap" Width="500">
+                        This tab demonstrates a virtualized ItemsControl with ScrollViewer all hosted inside a SkiaHost.
+                        Hover over an item to see animation binding.
+                    </TextBlock>
+                    <skia:SkiaHost>
+                        <Border>
+                            <ItemsControl VirtualizingStackPanel.IsVirtualizing="True" ScrollViewer.CanContentScroll="True" ItemsSource="{Binding Items}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Margin="10">
+                                            <Border Width="50" Height="50">
+                                                <Border.Background>
+                                                    <SolidColorBrush Color="{Binding Color}" />
+                                                </Border.Background>
+                                                <Border.Triggers>
+                                                    <EventTrigger RoutedEvent="MouseEnter">
+                                                        <BeginStoryboard>
+                                                            <Storyboard>
+                                                                <DoubleAnimation Storyboard.TargetProperty="Width" To="300" Duration="00:00:0.3"></DoubleAnimation>
+                                                            </Storyboard>
+                                                        </BeginStoryboard>
+                                                    </EventTrigger>
+                                                    <EventTrigger RoutedEvent="MouseLeave">
+                                                        <BeginStoryboard>
+                                                            <Storyboard>
+                                                                <DoubleAnimation Storyboard.TargetProperty="Width" To="50" Duration="00:00:0.3"></DoubleAnimation>
+                                                            </Storyboard>
+                                                        </BeginStoryboard>
+                                                    </EventTrigger>
+                                                </Border.Triggers>
+                                            </Border>
+                                            <TextBlock VerticalAlignment="Center" Margin="10 0 0 0" Text="{Binding Name}"></TextBlock>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <VirtualizingStackPanel />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.Template>
+                                    <ControlTemplate>
+                                        <Border BorderThickness="{TemplateBinding Border.BorderThickness}" Padding="{TemplateBinding Control.Padding}" BorderBrush="{TemplateBinding Border.BorderBrush}" Background="{TemplateBinding Panel.Background}" SnapsToDevicePixels="True">
+                                            <ScrollViewer Padding="{TemplateBinding Control.Padding}" Focusable="False">
+                                                <ItemsPresenter SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
+                                            </ScrollViewer>
+                                        </Border>
+                                    </ControlTemplate>
+                                </ItemsControl.Template>
+                            </ItemsControl>
+                        </Border>
                     </skia:SkiaHost>
-                <!--</Border>-->
-            <!--</ScrollViewer>-->
-        </DockPanel>
+                </DockPanel>
+            </TabItem>
+            <TabItem Header="Virtualized Items Source 2">
+                <DockPanel>
+                    <TextBlock Margin="10" DockPanel.Dock="Top" HorizontalAlignment="Left" TextWrapping="Wrap" Width="500">
+                        This tab demonstrates a the ability of SkiaHost to virtualize its rendering by wrapping the SkiaHost inside a ScrollViewer.
+                    </TextBlock>
+                    <ScrollViewer>
+                        <skia:SkiaHost>
+                            <Border>
+                                <ItemsControl VirtualizingStackPanel.IsVirtualizing="True" ScrollViewer.CanContentScroll="True" ItemsSource="{Binding Items}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" Margin="10">
+                                                <Border Width="50" Height="50">
+                                                    <Border.Background>
+                                                        <SolidColorBrush Color="{Binding Color}" />
+                                                    </Border.Background>
+                                                    <Border.Triggers>
+                                                        <EventTrigger RoutedEvent="MouseEnter">
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="Width" To="300" Duration="00:00:0.3"></DoubleAnimation>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                        <EventTrigger RoutedEvent="MouseLeave">
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="Width" To="50" Duration="00:00:0.3"></DoubleAnimation>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                    </Border.Triggers>
+                                                </Border>
+                                                <TextBlock VerticalAlignment="Center" Margin="10 0 0 0" Text="{Binding Name}"></TextBlock>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Border>
+                        </skia:SkiaHost>
+                    </ScrollViewer>
+                </DockPanel>
+            </TabItem>
+            <TabItem Header="Smooth Canvas">
+                <DockPanel>
+                    <TextBlock Margin="10" DockPanel.Dock="Top" HorizontalAlignment="Left" TextWrapping="Wrap" Width="500">
+                        This tab demonstrates the ability to render a canvas with many elements and smooth scrolling.
+                    </TextBlock>
+                    <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
+                        <skia:SkiaHost>
+                            <Border>
+                                <ItemsControl VirtualizingStackPanel.IsVirtualizing="True" ScrollViewer.CanContentScroll="True" ItemsSource="{Binding Items}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <Canvas Width="1920" Height="1080"></Canvas>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemContainerStyle>
+                                        <Style TargetType="FrameworkElement">
+                                            <Setter Property="Canvas.Left" Value="{Binding X}"></Setter>
+                                            <Setter Property="Canvas.Top" Value="{Binding Y}"></Setter>
+                                        </Style>
+                                    </ItemsControl.ItemContainerStyle>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" Margin="10">
+                                                <Border Width="50" Height="50">
+                                                    <Border.Background>
+                                                        <SolidColorBrush Color="{Binding Color}" />
+                                                    </Border.Background>
+                                                    <Border.Triggers>
+                                                        <EventTrigger RoutedEvent="MouseEnter">
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="Width" To="300" Duration="00:00:0.3"></DoubleAnimation>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                        <EventTrigger RoutedEvent="MouseLeave">
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="Width" To="50" Duration="00:00:0.3"></DoubleAnimation>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                    </Border.Triggers>
+                                                </Border>
+                                                <TextBlock VerticalAlignment="Center" Margin="10 0 0 0" Text="{Binding Name}"></TextBlock>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Border>
+                        </skia:SkiaHost>
+                    </ScrollViewer>
+                </DockPanel>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>

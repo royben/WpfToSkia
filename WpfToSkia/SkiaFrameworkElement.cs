@@ -13,7 +13,7 @@ using WpfToSkia.ExtensionsMethods;
 
 namespace WpfToSkia
 {
-    public class SkiaFrameworkElement
+    public class SkiaFrameworkElement : DependencyObject
     {
         private FrameworkElement _wpfElement;
         public FrameworkElement WpfElement

@@ -137,6 +137,7 @@
     <Compile Include="SkiaElements\SkiaBorder.cs" />
     <Compile Include="SkiaElements\SkiaItemsControl.cs" />
     <Compile Include="SkiaElements\SkiaRectangle.cs" />
+    <Compile Include="SkiaElements\SkiaScrollViewer.cs" />
     <Compile Include="SkiaElements\SkiaStackPanel.cs" />
     <Compile Include="SkiaElements\SkiaTextBlock.cs" />
     <Compile Include="SkiaFrameworkElement.cs" />
