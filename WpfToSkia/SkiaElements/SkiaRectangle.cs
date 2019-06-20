@@ -17,7 +17,7 @@ namespace WpfToSkia.SkiaElements
 
             Rectangle rectangle = WpfElement as Rectangle;
 
-            DrawingStyle style = DrawingStyle.FromElement(rectangle);
+            DrawingStyle style = DrawingStyle.FromElement(this);
             style.Fill = rectangle.Fill;
             style.Stroke = rectangle.Stroke;
             style.StrokeThickness = new Thickness(rectangle.StrokeThickness);

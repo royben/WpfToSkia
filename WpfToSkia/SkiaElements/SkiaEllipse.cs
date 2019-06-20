@@ -17,7 +17,7 @@ namespace WpfToSkia.SkiaElements
 
             Ellipse ellipse = WpfElement as Ellipse;
 
-            DrawingStyle style = DrawingStyle.FromElement(ellipse);
+            DrawingStyle style = DrawingStyle.FromElement(this);
             style.Fill = ellipse.Fill;
             style.Stroke = ellipse.Stroke;
             style.StrokeThickness = new Thickness(ellipse.StrokeThickness);

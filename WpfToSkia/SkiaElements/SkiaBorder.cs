@@ -19,7 +19,7 @@ namespace WpfToSkia.SkiaElements
 
             Border border = WpfElement as Border;
 
-            DrawingStyle style = DrawingStyle.FromElement(border);
+            DrawingStyle style = DrawingStyle.FromElement(this);
             style.CornerRadius = border.CornerRadius;
             style.Fill = border.Background;
             style.Stroke = border.BorderBrush;

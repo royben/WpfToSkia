@@ -40,13 +40,22 @@ namespace WpfToSkia
             get { return Stroke != null && StrokeThickness.Left > 0; }
         }
 
-        public static DrawingStyle FromElement(FrameworkElement element)
+        public static DrawingStyle FromElement(SkiaFrameworkElement element)
         {
             DrawingStyle style = new DrawingStyle();
             style.EdgeMode = RenderOptions.GetEdgeMode(element);
-            style.Effect = element.Effect;
-            style.Transform = element.RenderTransform;
-            style.TransformOrigin = element.RenderTransformOrigin;
+            style.Effect = element.WpfElement.Effect;
+
+            if (element.Parent != null && element.Parent.WpfElement.RenderTransform != Transform.Identity)
+            {
+                style.Transform = element.Parent.WpfElement.RenderTransform;
+                style.TransformOrigin = element.Parent.WpfElement.RenderTransformOrigin;
+            }
+            else
+            {
+                style.Transform = element.WpfElement.RenderTransform;
+                style.TransformOrigin = element.WpfElement.RenderTransformOrigin;
+            }
             return style;
         }
     }

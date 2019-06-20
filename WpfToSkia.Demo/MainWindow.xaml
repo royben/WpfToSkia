@@ -215,6 +215,29 @@
                                     </EventTrigger>
                                 </Rectangle.Triggers>
                             </Rectangle>
+                            <Border Width="100" Height="100" Canvas.Left="500" Canvas.Top="100" Background="Red" BorderBrush="Black" BorderThickness="2" RenderTransformOrigin="0.5,0.5">
+                                <Border.RenderTransform>
+                                    <ScaleTransform ScaleX="1" ScaleY="1" />
+                                </Border.RenderTransform>
+                                <Border.Triggers>
+                                    <EventTrigger RoutedEvent="MouseEnter">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX" To="2" Duration="00:00:0.3"></DoubleAnimation>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                    <EventTrigger RoutedEvent="MouseLeave">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX" To="1" Duration="00:00:0.3"></DoubleAnimation>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Border.Triggers>
+
+                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">Some Text</TextBlock>
+                            </Border>
                         </Canvas>
                     </Border>
                 </skia:SkiaHost>

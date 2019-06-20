@@ -134,7 +134,6 @@
     <Compile Include="Renderers\GdiRenderer.cs" />
     <Compile Include="Renderers\MixedRenderer.cs" />
     <Compile Include="Renderers\SkiaRenderer.cs" />
-    <Compile Include="RenderPackage.cs" />
     <Compile Include="SkiaElementResolver.cs" />
     <Compile Include="SkiaElements\SkiaBorder.cs" />
     <Compile Include="SkiaElements\SkiaEllipse.cs" />

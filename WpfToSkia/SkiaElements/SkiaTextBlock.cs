@@ -19,7 +19,7 @@ namespace WpfToSkia.SkiaElements
 
             TextBlock textBlock = WpfElement as TextBlock;
 
-            DrawingStyle style = DrawingStyle.FromElement(textBlock);
+            DrawingStyle style = DrawingStyle.FromElement(this);
             style.Fill = textBlock.Foreground;
             style.FontFamily = textBlock.FontFamily;
             style.FontSize = textBlock.FontSize;
