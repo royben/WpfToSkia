@@ -112,6 +112,8 @@
     <Compile Include="ExtensionsMethods\DoubleExtensions.cs" />
     <Compile Include="ExtensionsMethods\FrameworkElementExtensions.cs" />
     <Compile Include="ExtensionsMethods\RectExtensions.cs" />
+    <Compile Include="ExtensionsMethods\SkiaCanvasExtensions.cs" />
+    <Compile Include="ExtensionsMethods\SKPaintExtensions.cs" />
     <Compile Include="IDrawingContext.cs" />
     <Compile Include="IRenderer.cs" />
     <Compile Include="ProducerConsumerQueue.cs" />
@@ -135,6 +137,7 @@
     <Compile Include="RenderPackage.cs" />
     <Compile Include="SkiaElementResolver.cs" />
     <Compile Include="SkiaElements\SkiaBorder.cs" />
+    <Compile Include="SkiaElements\SkiaEllipse.cs" />
     <Compile Include="SkiaElements\SkiaItemsControl.cs" />
     <Compile Include="SkiaElements\SkiaRectangle.cs" />
     <Compile Include="SkiaElements\SkiaScrollViewer.cs" />

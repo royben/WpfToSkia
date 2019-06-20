@@ -108,8 +108,14 @@ namespace WpfToSkia
             return new List<BindingProperty>()
             {
                  new BindingProperty(FrameworkElement.OpacityProperty,BindingPropertyMode.AffectsRender),
+
+                 new BindingProperty(FrameworkElement.MarginProperty,BindingPropertyMode.AffectsLayout),
+
                  new BindingProperty(FrameworkElement.WidthProperty,BindingPropertyMode.AffectsLayout),
                  new BindingProperty(FrameworkElement.HeightProperty,BindingPropertyMode.AffectsLayout),
+
+                 new BindingProperty(FrameworkElement.RenderTransformProperty,BindingPropertyMode.AffectsRender),
+                 new BindingProperty(FrameworkElement.LayoutTransformProperty,BindingPropertyMode.AffectsLayout),
             };
         }
 
@@ -120,7 +126,7 @@ namespace WpfToSkia
 
         protected void NotifyChildAdded(FrameworkElement element)
         {
-            ChildAdded?.Invoke(this,element);
+            ChildAdded?.Invoke(this, element);
         }
 
         protected void NotifyChildRemoved(FrameworkElement element)

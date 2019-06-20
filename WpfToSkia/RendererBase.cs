@@ -84,7 +84,7 @@ namespace WpfToSkia
             _renderThreadQueue = new ProducerConsumerQueue<RenderQueueItem>();
             _bindingThrottlers = new Dictionary<BindingProperty, ActionThrottle>();
             MaximumBitmapSize = 4000 * 4000;
-            BindingFPS = 30;
+            BindingFPS = 60;
             ScrollingFPS = 30;
             SizingFPS = 30;
             EnableBinding = true;

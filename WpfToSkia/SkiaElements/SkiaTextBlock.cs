@@ -19,12 +19,10 @@ namespace WpfToSkia.SkiaElements
 
             TextBlock textBlock = WpfElement as TextBlock;
 
-            DrawingStyle style = new DrawingStyle();
+            DrawingStyle style = DrawingStyle.FromElement(textBlock);
             style.Fill = textBlock.Foreground;
             style.FontFamily = textBlock.FontFamily;
             style.FontSize = textBlock.FontSize;
-            style.EdgeMode = RenderOptions.GetEdgeMode(textBlock);
-            style.Effect = textBlock.Effect;
             style.FontStyle = textBlock.FontStyle;
             style.FontWeight = textBlock.FontWeight;
             style.Opacity = opacity;

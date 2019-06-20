@@ -65,6 +65,7 @@ namespace WpfToSkia
                 SkiaElementResolver.Default.RegisterBinder<ItemsControl, SkiaItemsControl>();
                 SkiaElementResolver.Default.RegisterBinder<Rectangle, SkiaRectangle>();
                 SkiaElementResolver.Default.RegisterBinder<ScrollViewer, SkiaScrollViewer>();
+                SkiaElementResolver.Default.RegisterBinder<Ellipse, SkiaEllipse>();
             }
 
             Loaded += SkiaHost_Loaded;

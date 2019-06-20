@@ -100,5 +100,10 @@ namespace WpfToSkia.DrawingContexts
         {
 
         }
+
+        public void DrawEllipse(Rect bounds, DrawingStyle style)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

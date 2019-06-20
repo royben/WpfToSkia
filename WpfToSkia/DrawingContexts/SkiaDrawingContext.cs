@@ -15,8 +15,6 @@ namespace WpfToSkia.DrawingContexts
     public class SkiaDrawingContext : IDrawingContext
     {
         private SKCanvas _canvas;
-        private List<Action> _drawings;
-
         public SkiaDrawingContext(SKCanvas canvas)
         {
             _canvas = canvas;
@@ -24,117 +22,92 @@ namespace WpfToSkia.DrawingContexts
 
         public void BeginDrawing()
         {
-            _drawings = new List<Action>();
             _canvas.Save();
         }
 
         public void Clear(Color color)
         {
-            AddDrawingAction(() =>
-            {
-                _canvas.Clear(color.ToSKColor());
-            });
+            _canvas.Clear(color.ToSKColor());
         }
 
         public void DrawRect(Rect bounds, DrawingStyle style)
         {
+            _canvas.ApplyTransform(style.Transform, style.TransformOrigin, bounds);
+
             bool isRounded = style.CornerRadius.TopLeft > 0;
 
-            if (style.Fill != null)
+            if (style.HasFill)
             {
                 SKPaint paintFill = new SKPaint();
-                paintFill.Style = SKPaintStyle.Fill;
-                paintFill.IsAntialias = style.EdgeMode == EdgeMode.Unspecified;
+                paintFill.ApplyFill(bounds, style);
 
-                if (style.Fill is SolidColorBrush)
+                if (isRounded)
                 {
-                    paintFill.Color = style.Fill.ToSKColor();
+                    _canvas.DrawRoundRect(new SKRoundRect(bounds.ToSKRectStroke(style.StrokeThickness), style.CornerRadius.TopLeft.ToFloat(), style.CornerRadius.TopRight.ToFloat()), paintFill);
                 }
                 else
                 {
-                    paintFill.Shader = style.Fill.ToSkiaShader(bounds.Width, bounds.Height);
+                    _canvas.DrawRect(bounds.ToSKRectStroke(style.StrokeThickness), paintFill);
                 }
-
-                if (style.HasOpacity)
-                {
-                    paintFill.ColorFilter = SKColorFilter.CreateBlendMode(SKColors.White.WithAlpha((byte)(style.Opacity * 255d)), SKBlendMode.DstIn);
-                }
-
-                if (style.Effect != null)
-                {
-                    if (style.Effect is DropShadowEffect)
-                    {
-                        var fx = style.Effect as DropShadowEffect;
-                        paintFill.ImageFilter = SKImageFilter.CreateDropShadow(fx.ShadowDepth.ToFloat(), fx.ShadowDepth.ToFloat(), fx.BlurRadius.ToFloat(), fx.BlurRadius.ToFloat(), fx.Color.ToSKColor(), SKDropShadowImageFilterShadowMode.DrawShadowAndForeground);
-                    }
-                }
-
-                AddDrawingAction(() =>
-                {
-                    if (isRounded)
-                    {
-                        _canvas.DrawRoundRect(new SKRoundRect(bounds.ToSKRectStroke(style.StrokeThickness, 0, 0), style.CornerRadius.TopLeft.ToFloat(), style.CornerRadius.TopRight.ToFloat()), paintFill);
-                    }
-                    else
-                    {
-                        _canvas.DrawRect(bounds.ToSKRectStroke(style.StrokeThickness, 0, 0), paintFill);
-                    }
-                });
             }
 
-            if (style.Stroke != null && style.StrokeThickness.Left > 0)
+            if (style.HasStroke)
             {
                 SKPaint paintStroke = new SKPaint();
-                paintStroke.IsAntialias = style.EdgeMode == EdgeMode.Unspecified;
-                paintStroke.Style = SKPaintStyle.Stroke;
-                paintStroke.IsStroke = true;
-                paintStroke.StrokeWidth = style.StrokeThickness.Left.ToFloat();
+                paintStroke.ApplyStroke(bounds, style);
 
-                if (style.Stroke is SolidColorBrush)
+                if (isRounded)
                 {
-                    paintStroke.Color = style.Stroke.ToSKColor();
+                    _canvas.DrawRoundRect(new SKRoundRect(bounds.ToSKRectStroke(style.StrokeThickness), style.CornerRadius.TopLeft.ToFloat(), style.CornerRadius.TopRight.ToFloat()), paintStroke);
                 }
                 else
                 {
-                    paintStroke.Shader = style.Stroke.ToSkiaShader(bounds.Width, bounds.Height);
+                    _canvas.DrawRect(bounds.ToSKRectStroke(style.StrokeThickness), paintStroke);
                 }
-
-                if (style.HasOpacity)
-                {
-                    paintStroke.ColorFilter = SKColorFilter.CreateBlendMode(SKColors.White.WithAlpha((byte)(style.Opacity * 255d)), SKBlendMode.DstIn);
-                }
-
-                AddDrawingAction(() =>
-                {
-                    if (isRounded)
-                    {
-                        _canvas.DrawRoundRect(new SKRoundRect(bounds.ToSKRectStroke(style.StrokeThickness, 0, 0), style.CornerRadius.TopLeft.ToFloat(), style.CornerRadius.TopRight.ToFloat()), paintStroke);
-                    }
-                    else
-                    {
-                        _canvas.DrawRect(bounds.ToSKRectStroke(style.StrokeThickness, 0, 0), paintStroke);
-                    }
-                });
             }
+
+            _canvas.ResetMatrix();
         }
 
         public void ClipRect(Rect bounds, CornerRadius cornerRadius)
         {
-            AddDrawingAction(() =>
+            if (cornerRadius.TopLeft > 0)
             {
-                if (cornerRadius.TopLeft > 0)
-                {
-                    _canvas.ClipRoundRect(new SKRoundRect(bounds.ToSKRect(), cornerRadius.TopLeft.ToFloat(), cornerRadius.TopLeft.ToFloat()), SKClipOperation.Intersect, false);
-                }
-                else
-                {
-                    _canvas.ClipRect(bounds.ToSKRect(), SKClipOperation.Intersect, false);
-                }
-            });
+                _canvas.ClipRoundRect(new SKRoundRect(bounds.ToSKRect(), cornerRadius.TopLeft.ToFloat(), cornerRadius.TopLeft.ToFloat()), SKClipOperation.Intersect, false);
+            }
+            else
+            {
+                _canvas.ClipRect(bounds.ToSKRect(), SKClipOperation.Intersect, false);
+            }
+        }
+
+        public void DrawEllipse(Rect bounds, DrawingStyle style)
+        {
+            _canvas.ApplyTransform(style.Transform, style.TransformOrigin, bounds);
+
+            if (style.HasFill)
+            {
+                SKPaint paintFill = new SKPaint();
+                paintFill.ApplyFill(bounds, style);
+
+                _canvas.DrawOval(bounds.ToSKRectStroke(style.StrokeThickness), paintFill);
+            }
+
+            if (style.HasStroke)
+            {
+                SKPaint paintStroke = new SKPaint();
+                paintStroke.ApplyStroke(bounds, style);
+
+                _canvas.DrawOval(bounds.ToSKRectStroke(style.StrokeThickness), paintStroke);
+            }
+
+            _canvas.ResetMatrix();
         }
 
         public void DrawText(string text, Rect bounds, DrawingStyle style)
         {
+            _canvas.ApplyTransform(style.Transform, style.TransformOrigin, bounds);
+
             SKFontStyleSlant fontStyle = SKFontStyleSlant.Upright;
 
             if (style.FontStyle == FontStyles.Italic)
@@ -170,27 +143,14 @@ namespace WpfToSkia.DrawingContexts
                 }
             }
 
-            AddDrawingAction(() =>
-            {
-                _canvas.DrawText(text, bounds.Left.ToFloat(), bounds.Bottom.ToFloat(), paint);
-            });
+            _canvas.DrawText(text, bounds.Left.ToFloat(), bounds.Bottom.ToFloat(), paint);
+
+            _canvas.ResetMatrix();
         }
 
         public void EndDrawing()
         {
-            foreach (var drawing in _drawings)
-            {
-                drawing();
-            }
-
-            _drawings.Clear();
-
             _canvas.Restore();
-        }
-
-        private void AddDrawingAction(Action drawingAction)
-        {
-            _drawings.Add(drawingAction);
         }
     }
 }

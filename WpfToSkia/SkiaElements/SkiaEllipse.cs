@@ -9,27 +9,28 @@ using System.Windows.Shapes;
 
 namespace WpfToSkia.SkiaElements
 {
-    public class SkiaRectangle : SkiaFrameworkElement
+    public class SkiaEllipse : SkiaFrameworkElement
     {
         protected override void OnRender(IDrawingContext context, Rect bounds, double opacity)
         {
             base.OnRender(context, bounds, opacity);
 
-            Rectangle rectangle = WpfElement as Rectangle;
+            Ellipse ellipse = WpfElement as Ellipse;
 
-            DrawingStyle style = DrawingStyle.FromElement(rectangle);
-            style.Fill = rectangle.Fill;
-            style.Stroke = rectangle.Stroke;
-            style.StrokeThickness = new Thickness(rectangle.StrokeThickness);
+            DrawingStyle style = DrawingStyle.FromElement(ellipse);
+            style.Fill = ellipse.Fill;
+            style.Stroke = ellipse.Stroke;
+            style.StrokeThickness = new Thickness(ellipse.StrokeThickness);
             style.Opacity = opacity;
 
-            context.DrawRect(bounds, style);
+            context.DrawEllipse(bounds, style);
         }
 
         public override List<BindingProperty> GetBindingProperties()
         {
             var props = base.GetBindingProperties();
-            props.Add(new BindingProperty(Rectangle.FillProperty, BindingPropertyMode.AffectsRender));
+            props.Add(new BindingProperty(Ellipse.FillProperty, BindingPropertyMode.AffectsRender));
+            props.Add(new BindingProperty(Ellipse.StrokeProperty, BindingPropertyMode.AffectsRender));
             return props;
         }
     }

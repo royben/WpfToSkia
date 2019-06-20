@@ -18,6 +18,8 @@ namespace WpfToSkia
 
         void ClipRect(Rect bounds, CornerRadius cornerRadius);
 
+        void DrawEllipse(Rect bounds, DrawingStyle style);
+
         void DrawText(String text, Rect bounds, DrawingStyle style);
 
         void EndDrawing();

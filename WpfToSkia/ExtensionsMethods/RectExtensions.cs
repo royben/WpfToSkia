@@ -16,9 +16,9 @@ namespace WpfToSkia.ExtensionsMethods
             return new SKRect(rect.Left.ToFloat(), rect.Top.ToFloat(), rect.Right.ToFloat(), rect.Bottom.ToFloat());
         }
 
-        public static SKRect ToSKRectStroke(this Rect rect, Thickness thickness, double offsetX = 0, double offsetY = 0)
+        public static SKRect ToSKRectStroke(this Rect rect, Thickness thickness)
         {
-            var r =  new SKRect((rect.Left + thickness.Left / 2 + offsetX).ToFloat(), (rect.Top + thickness.Top / 2 + offsetY).ToFloat(), (rect.Right - thickness.Right / 2 - offsetX).ToFloat(), (rect.Bottom - thickness.Bottom / 2 + offsetY).ToFloat());
+            var r =  new SKRect((rect.Left + thickness.Left / 2).ToFloat(), (rect.Top + thickness.Top / 2).ToFloat(), (rect.Right - thickness.Right / 2).ToFloat(), (rect.Bottom - thickness.Bottom / 2).ToFloat());
             return r;
         }
 
@@ -27,9 +27,9 @@ namespace WpfToSkia.ExtensionsMethods
             return new Rect((rect.Left + thickness.Left / 2).ToFloat(), (rect.Top + thickness.Top / 2).ToFloat(), (rect.Right - thickness.Right / 2).ToFloat(), (rect.Bottom - thickness.Bottom / 2).ToFloat());
         }
 
-        public static SKRect ToSKRectClip(this Rect rect, Thickness thickness, double offsetX = 0, double offsetY = 0)
+        public static SKRect ToSKRectClip(this Rect rect, Thickness thickness)
         {
-            return new SKRect((rect.Left + thickness.Left + offsetX).ToFloat(), (rect.Top + thickness.Top + offsetY).ToFloat(), (rect.Right - thickness.Right + offsetX).ToFloat(), (rect.Bottom - thickness.Bottom + offsetY).ToFloat());
+            return new SKRect((rect.Left + thickness.Left).ToFloat(), (rect.Top + thickness.Top).ToFloat(), (rect.Right - thickness.Right).ToFloat(), (rect.Bottom - thickness.Bottom).ToFloat());
         }
 
         public static RectangleF ToGdiRectF(this Rect rect)

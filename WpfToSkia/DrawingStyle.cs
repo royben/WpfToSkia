@@ -22,10 +22,32 @@ namespace WpfToSkia
         public double FontSize { get; set; }
         public FontWeight FontWeight { get; set; }
         public FontStyle FontStyle { get; set; }
+        public Transform Transform { get; set; }
+        public Point TransformOrigin { get; set; }
 
         public bool HasOpacity
         {
             get { return Opacity < 1; }
+        }
+
+        public bool HasFill
+        {
+            get { return Fill != null; }
+        }
+
+        public bool HasStroke
+        {
+            get { return Stroke != null && StrokeThickness.Left > 0; }
+        }
+
+        public static DrawingStyle FromElement(FrameworkElement element)
+        {
+            DrawingStyle style = new DrawingStyle();
+            style.EdgeMode = RenderOptions.GetEdgeMode(element);
+            style.Effect = element.Effect;
+            style.Transform = element.RenderTransform;
+            style.TransformOrigin = element.RenderTransformOrigin;
+            return style;
         }
     }
 }
