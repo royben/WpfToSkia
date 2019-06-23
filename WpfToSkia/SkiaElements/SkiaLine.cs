@@ -23,5 +23,13 @@ namespace WpfToSkia.SkiaElements
 
             context.DrawLine(bounds, new Point(line.X1, line.Y1), new Point(line.X2, line.Y2), style);
         }
+
+        public override List<BindingProperty> GetBindingProperties()
+        {
+            var props = base.GetBindingProperties();
+            props.Add(new BindingProperty(Line.StrokeProperty, BindingPropertyMode.AffectsRender));
+            props.Add(new BindingProperty(Line.StrokeThicknessProperty, BindingPropertyMode.AffectsRender));
+            return props;
+        }
     }
 }

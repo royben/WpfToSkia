@@ -31,6 +31,7 @@ namespace WpfToSkia.SkiaElements
             var props = base.GetBindingProperties();
             props.Add(new BindingProperty(Ellipse.FillProperty, BindingPropertyMode.AffectsRender));
             props.Add(new BindingProperty(Ellipse.StrokeProperty, BindingPropertyMode.AffectsRender));
+            props.Add(new BindingProperty(Ellipse.StrokeThicknessProperty, BindingPropertyMode.AffectsRender));
             return props;
         }
     }

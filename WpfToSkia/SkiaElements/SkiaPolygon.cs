@@ -24,5 +24,15 @@ namespace WpfToSkia.SkiaElements
 
             context.DrawPolygon(bounds, polygon.Points.ToArray(), style);
         }
+
+        public override List<BindingProperty> GetBindingProperties()
+        {
+            var props = base.GetBindingProperties();
+            props.Add(new BindingProperty(Polygon.FillProperty, BindingPropertyMode.AffectsRender));
+            props.Add(new BindingProperty(Polygon.StrokeProperty, BindingPropertyMode.AffectsRender));
+            props.Add(new BindingProperty(Polygon.StrokeThicknessProperty, BindingPropertyMode.AffectsRender));
+            props.Add(new BindingProperty(Polygon.PointsProperty, BindingPropertyMode.AffectsRender));
+            return props;
+        }
     }
 }

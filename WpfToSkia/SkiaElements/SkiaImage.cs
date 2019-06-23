@@ -22,5 +22,12 @@ namespace WpfToSkia.SkiaElements
 
             context.DrawImage(bounds, image.Source as BitmapSource, style);
         }
+
+        public override List<BindingProperty> GetBindingProperties()
+        {
+            var props = base.GetBindingProperties();
+            props.Add(new BindingProperty(Image.SourceProperty, BindingPropertyMode.AffectsRender));
+            return props;
+        }
     }
 }

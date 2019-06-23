@@ -38,6 +38,8 @@ namespace WpfToSkia.SkiaElements
         {
             var props = base.GetBindingProperties();
             props.Add(new BindingProperty(Border.BackgroundProperty, BindingPropertyMode.AffectsRender));
+            props.Add(new BindingProperty(Border.BorderBrushProperty, BindingPropertyMode.AffectsRender));
+            props.Add(new BindingProperty(Border.BorderThicknessProperty, BindingPropertyMode.AffectsRender));
             return props;
         }
     }

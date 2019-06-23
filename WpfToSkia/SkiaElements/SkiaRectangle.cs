@@ -30,6 +30,8 @@ namespace WpfToSkia.SkiaElements
         {
             var props = base.GetBindingProperties();
             props.Add(new BindingProperty(Rectangle.FillProperty, BindingPropertyMode.AffectsRender));
+            props.Add(new BindingProperty(Rectangle.StrokeProperty, BindingPropertyMode.AffectsRender));
+            props.Add(new BindingProperty(Rectangle.StrokeThicknessProperty, BindingPropertyMode.AffectsRender));
             return props;
         }
     }

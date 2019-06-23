@@ -24,5 +24,14 @@ namespace WpfToSkia.SkiaElements
 
             context.DrawGeometry(bounds, path.Data, style);
         }
+
+        public override List<BindingProperty> GetBindingProperties()
+        {
+            var props = base.GetBindingProperties();
+            props.Add(new BindingProperty(Path.FillProperty, BindingPropertyMode.AffectsRender));
+            props.Add(new BindingProperty(Path.StrokeProperty, BindingPropertyMode.AffectsRender));
+            props.Add(new BindingProperty(Path.StrokeThicknessProperty, BindingPropertyMode.AffectsRender));
+            return props;
+        }
     }
 }

@@ -50,6 +50,8 @@ namespace WpfToSkia.SkiaElements
             var list = base.GetBindingProperties();
 
             list.Add(new BindingProperty(ItemsControl.ItemsSourceProperty, BindingPropertyMode.AffectsLayout));
+            list.Add(new BindingProperty(ItemsControl.ItemTemplateProperty, BindingPropertyMode.AffectsLayout));
+            list.Add(new BindingProperty(ItemsControl.ItemsPanelProperty, BindingPropertyMode.AffectsLayout));
 
             return list;
         }
