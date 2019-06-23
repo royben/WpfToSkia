@@ -28,7 +28,7 @@ namespace WpfToSkia.ExtensionsMethods
 
             if (style.HasOpacity)
             {
-                paint.ColorFilter = SKColorFilter.CreateBlendMode(SKColors.White.WithAlpha((byte)(style.Opacity * 255d)), SKBlendMode.DstIn);
+                paint.ColorFilter = SKColorFilter.CreateBlendMode(SKColors.Transparent.WithAlpha((byte)(style.Opacity * 255d)), SKBlendMode.DstIn);
             }
 
             if (style.Effect != null)
@@ -59,7 +59,7 @@ namespace WpfToSkia.ExtensionsMethods
 
             if (style.HasOpacity)
             {
-                paint.ColorFilter = SKColorFilter.CreateBlendMode(SKColors.White.WithAlpha((byte)(style.Opacity * 255d)), SKBlendMode.DstIn);
+                paint.ColorFilter = SKColorFilter.CreateBlendMode(SKColors.Transparent.WithAlpha((byte)(style.Opacity * 255d)), SKBlendMode.DstIn);
             }
         }
     }

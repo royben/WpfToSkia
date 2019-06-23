@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 
 namespace WpfToSkia
 {
@@ -20,7 +22,15 @@ namespace WpfToSkia
 
         void DrawEllipse(Rect bounds, DrawingStyle style);
 
-        void DrawText(String text, Rect bounds, DrawingStyle style);
+        void DrawText(Rect bounds, String text, DrawingStyle style);
+
+        void DrawImage(Rect bounds, BitmapSource image, DrawingStyle style);
+
+        void DrawGeometry(Rect bounds, Geometry geometry, DrawingStyle style);
+
+        void DrawLine(Rect bounds, Point p1, Point p2, DrawingStyle style);
+
+        void DrawPolygon(Rect bounds, Point[] points, DrawingStyle style);
 
         void EndDrawing();
     }

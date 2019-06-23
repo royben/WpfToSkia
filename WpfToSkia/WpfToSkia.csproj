@@ -103,14 +103,18 @@
     <Compile Include="BindingEventContainer.cs" />
     <Compile Include="BindingProperty.cs" />
     <Compile Include="BindingPropertyMode.cs" />
-    <Compile Include="DrawingContexts\GdiDrawingContext.cs" />
-    <Compile Include="DrawingContexts\MixedDrawingContext.cs" />
+    <None Include="DrawingContexts\GdiDrawingContext.cs" />
+    <None Include="DrawingContexts\MixedDrawingContext.cs" />
     <Compile Include="DrawingContexts\SkiaDrawingContext.cs" />
+    <None Include="DrawingContexts\WpfDrawingContext.cs" />
     <Compile Include="DrawingStyle.cs" />
+    <Compile Include="ExtensionsMethods\BitmapSourceExtensions.cs" />
     <Compile Include="ExtensionsMethods\BrushExtensions.cs" />
     <Compile Include="ExtensionsMethods\ColorExtensions.cs" />
     <Compile Include="ExtensionsMethods\DoubleExtensions.cs" />
     <Compile Include="ExtensionsMethods\FrameworkElementExtensions.cs" />
+    <Compile Include="ExtensionsMethods\GeometryExtensions.cs" />
+    <Compile Include="ExtensionsMethods\PointExtensions.cs" />
     <Compile Include="ExtensionsMethods\RectExtensions.cs" />
     <Compile Include="ExtensionsMethods\SkiaCanvasExtensions.cs" />
     <Compile Include="ExtensionsMethods\SKPaintExtensions.cs" />
@@ -131,13 +135,18 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="RendererBase.cs" />
-    <Compile Include="Renderers\GdiRenderer.cs" />
-    <Compile Include="Renderers\MixedRenderer.cs" />
+    <None Include="Renderers\GdiRenderer.cs" />
+    <None Include="Renderers\MixedRenderer.cs" />
     <Compile Include="Renderers\SkiaRenderer.cs" />
+    <None Include="Renderers\WpfRenderer.cs" />
     <Compile Include="SkiaElementResolver.cs" />
     <Compile Include="SkiaElements\SkiaBorder.cs" />
     <Compile Include="SkiaElements\SkiaEllipse.cs" />
+    <Compile Include="SkiaElements\SkiaImage.cs" />
     <Compile Include="SkiaElements\SkiaItemsControl.cs" />
+    <Compile Include="SkiaElements\SkiaLine.cs" />
+    <Compile Include="SkiaElements\SkiaPath.cs" />
+    <Compile Include="SkiaElements\SkiaPolygon.cs" />
     <Compile Include="SkiaElements\SkiaRectangle.cs" />
     <Compile Include="SkiaElements\SkiaScrollViewer.cs" />
     <Compile Include="SkiaElements\SkiaStackPanel.cs" />

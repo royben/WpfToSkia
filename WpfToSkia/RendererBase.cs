@@ -289,10 +289,17 @@ namespace WpfToSkia
 
             context.EndDrawing();
 
+            OnRenderCompleted(_bitmap.BackBuffer, (int)_bitmap.Width, (int)_bitmap.Height, (int)_bitmap.Width * 4);
+
             _bitmap.AddDirtyRect(new Int32Rect(0, 0, (int)_bitmap.Width, (int)_bitmap.Height));
             _bitmap.Unlock();
 
             OnSourceChanged();
+        }
+
+        protected virtual void OnRenderCompleted(IntPtr backBuffer, int width, int height, int stride)
+        {
+
         }
 
         private void RenderSingle(SkiaFrameworkElement element, BindingPropertyMode mode)
@@ -340,6 +347,8 @@ namespace WpfToSkia
                 {
                     bounds.Height = _bitmap.Height - bounds.Top;
                 }
+
+                OnRenderCompleted(_bitmap.BackBuffer, (int)_bitmap.Width, (int)_bitmap.Height, (int)_bitmap.Width * 4);
 
                 _bitmap.AddDirtyRect(new Int32Rect((int)Math.Max(bounds.Left, 0), (int)Math.Max(bounds.Top, 0), (int)bounds.Width, (int)bounds.Height));
                 _bitmap.Unlock();

@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 using WpfToSkia.ExtensionsMethods;
 
 namespace WpfToSkia.DrawingContexts
@@ -28,6 +30,41 @@ namespace WpfToSkia.DrawingContexts
         public void Clear(Color color)
         {
             _canvas.Clear(color.ToSKColor());
+        }
+
+        public void DrawLine(Rect bounds, Point p1, Point p2, DrawingStyle style)
+        {
+            _canvas.ApplyTransform(style.Transform, style.TransformOrigin, bounds);
+
+            SKPaint paint = new SKPaint();
+            paint.ApplyStroke(bounds, style);
+
+            _canvas.DrawLine(p1.ToSKPoint(), p2.ToSKPoint(), paint);
+
+            _canvas.ResetMatrix();
+        }
+
+        public void DrawPolygon(Rect bounds, Point[] points, DrawingStyle style)
+        {
+            _canvas.ApplyTransform(style.Transform, style.TransformOrigin, bounds);
+
+            var pp = points.Select(x => x.ToSKPoint()).ToArray();
+
+            if (style.HasFill)
+            {
+                SKPaint paintFill = new SKPaint();
+                paintFill.ApplyFill(bounds, style);
+                _canvas.DrawPoints(SKPointMode.Polygon, pp, paintFill);
+            }
+
+            if (style.HasStroke)
+            {
+                SKPaint paintStroke = new SKPaint();
+                paintStroke.ApplyStroke(bounds, style);
+                _canvas.DrawPoints(SKPointMode.Polygon, pp, paintStroke);
+            }
+
+            _canvas.ResetMatrix();
         }
 
         public void DrawRect(Rect bounds, DrawingStyle style)
@@ -104,7 +141,7 @@ namespace WpfToSkia.DrawingContexts
             _canvas.ResetMatrix();
         }
 
-        public void DrawText(string text, Rect bounds, DrawingStyle style)
+        public void DrawText(Rect bounds, string text, DrawingStyle style)
         {
             _canvas.ApplyTransform(style.Transform, style.TransformOrigin, bounds);
 
@@ -144,6 +181,55 @@ namespace WpfToSkia.DrawingContexts
             }
 
             _canvas.DrawText(text, bounds.Left.ToFloat(), bounds.Bottom.ToFloat(), paint);
+
+            _canvas.ResetMatrix();
+        }
+
+        public void DrawImage(Rect bounds, BitmapSource image, DrawingStyle style)
+        {
+            _canvas.ApplyTransform(style.Transform, style.TransformOrigin, bounds);
+
+            SKPaint paint = new SKPaint();
+
+            if (style.HasOpacity)
+            {
+                paint.ColorFilter = SKColorFilter.CreateBlendMode(SKColors.White.WithAlpha((byte)(style.Opacity * 255d)), SKBlendMode.DstIn);
+            }
+
+            _canvas.DrawBitmap(image.ToSKBitmap(), bounds.ToSKRect(), paint);
+
+            _canvas.ResetMatrix();
+        }
+
+        public void DrawGeometry(Rect bounds, Geometry geometry, DrawingStyle style)
+        {
+            _canvas.ApplyTransform(style.Transform, style.TransformOrigin, bounds);
+
+            PathGeometry g = geometry as PathGeometry;
+
+            if (g == null)
+            {
+                g = (geometry as StreamGeometry).GetWidenedPathGeometry(new Pen(Brushes.Chartreuse, 2d));
+            }
+
+            SKPath skPath = g.ToSKPath();
+            skPath.Offset(bounds.TopLeft.ToSKPoint());
+
+            if (style.HasFill)
+            {
+                SKPaint paintFill = new SKPaint();
+                paintFill.ApplyFill(bounds, style);
+
+                _canvas.DrawPath(skPath, paintFill);
+            }
+
+            if (style.HasStroke)
+            {
+                SKPaint paintStroke = new SKPaint();
+                paintStroke.ApplyStroke(bounds, style);
+
+                _canvas.DrawPath(skPath, paintStroke);
+            }
 
             _canvas.ResetMatrix();
         }

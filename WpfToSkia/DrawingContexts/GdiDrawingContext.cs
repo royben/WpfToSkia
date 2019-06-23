@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using WpfToSkia.ExtensionsMethods;
 
 namespace WpfToSkia.DrawingContexts
@@ -44,7 +46,7 @@ namespace WpfToSkia.DrawingContexts
 
             if (style.Stroke != null)
             {
-                Pen pen = new Pen(style.Stroke.ToGdiBrush(bounds.Width, bounds.Height), style.StrokeThickness.Left.ToFloat());
+                System.Drawing.Pen pen = new System.Drawing.Pen(style.Stroke.ToGdiBrush(bounds.Width, bounds.Height), style.StrokeThickness.Left.ToFloat());
                 _g.DrawRectangle(pen, bounds.Left.ToFloat(), bounds.Top.ToFloat(), bounds.Width.ToFloat(), bounds.Height.ToFloat());
                 pen.Dispose();
             }
@@ -71,6 +73,16 @@ namespace WpfToSkia.DrawingContexts
         }
 
         public void DrawEllipse(Rect bounds, DrawingStyle style)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DrawImage(Rect bounds, BitmapSource image, DrawingStyle style)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DrawGeometry(Rect bounds, Geometry geometry, DrawingStyle style)
         {
             throw new NotImplementedException();
         }

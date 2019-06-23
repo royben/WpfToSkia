@@ -27,7 +27,7 @@ namespace WpfToSkia.SkiaElements
             style.FontWeight = textBlock.FontWeight;
             style.Opacity = opacity;
 
-            context.DrawText(textBlock.Text, bounds, style);
+            context.DrawText(bounds, textBlock.Text, style);
         }
     }
 }

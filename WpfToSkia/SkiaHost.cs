@@ -23,7 +23,6 @@ namespace WpfToSkia
     [ContentProperty(nameof(Child))]
     public class SkiaHost : FrameworkElement
     {
-        private WriteableBitmap _bitmap;
         private Image _image;
         private bool _host_loaded;
         private ScrollViewer _scrollViewer;
@@ -66,6 +65,10 @@ namespace WpfToSkia
                 SkiaElementResolver.Default.RegisterBinder<Rectangle, SkiaRectangle>();
                 SkiaElementResolver.Default.RegisterBinder<ScrollViewer, SkiaScrollViewer>();
                 SkiaElementResolver.Default.RegisterBinder<Ellipse, SkiaEllipse>();
+                SkiaElementResolver.Default.RegisterBinder<Path, SkiaPath>();
+                SkiaElementResolver.Default.RegisterBinder<Line, SkiaLine>();
+                SkiaElementResolver.Default.RegisterBinder<Polygon, SkiaPolygon>();
+                SkiaElementResolver.Default.RegisterBinder<Image, SkiaImage>();
             }
 
             Loaded += SkiaHost_Loaded;

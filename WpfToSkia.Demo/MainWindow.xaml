@@ -224,6 +224,7 @@
                                         <BeginStoryboard>
                                             <Storyboard>
                                                 <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX" To="2" Duration="00:00:0.3"></DoubleAnimation>
+                                                <DoubleAnimation Storyboard.TargetProperty="Opacity" To="0.5" Duration="00:00:0.3"></DoubleAnimation>
                                             </Storyboard>
                                         </BeginStoryboard>
                                     </EventTrigger>
@@ -231,6 +232,7 @@
                                         <BeginStoryboard>
                                             <Storyboard>
                                                 <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX" To="1" Duration="00:00:0.3"></DoubleAnimation>
+                                                <DoubleAnimation Storyboard.TargetProperty="Opacity" To="1" Duration="00:00:0.3"></DoubleAnimation>
                                             </Storyboard>
                                         </BeginStoryboard>
                                     </EventTrigger>
@@ -238,8 +240,59 @@
 
                                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">Some Text</TextBlock>
                             </Border>
+
+                            <Path Canvas.Left="700" Canvas.Top="50" Stroke="Black" StrokeThickness="3" Fill="Red">
+                                <Path.Data>
+                                    <PathGeometry>
+                                        <PathGeometry.Figures>
+                                            <PathFigure StartPoint="20,100" IsClosed="True">
+                                                <PolyLineSegment Points="100,20 180,100 100,180"/>
+                                            </PathFigure>
+                                        </PathGeometry.Figures>
+                                    </PathGeometry>
+                                </Path.Data>
+                            </Path>
+
+                            <Path Canvas.Left="950" Canvas.Top="50" Stroke="Black" StrokeThickness="3" Fill="Red">
+                                <Path.Data>
+                                    <PathGeometry>
+                                        <PathGeometry.Figures>
+                                            <PathFigure StartPoint="20,100" IsClosed="True">
+                                                <PolyBezierSegment
+                                                        Points="0,0 100,100 100,20
+                                                                200,0 100,100 180,100
+                                                                200,200 100,100 100,180,
+                                                                0,200 100,100 20,100"/>
+                                            </PathFigure>
+                                        </PathGeometry.Figures>
+                                    </PathGeometry>
+                                </Path.Data>
+                            </Path>
+
+                            <Path Canvas.Left="100" Canvas.Top="300" Stroke="Black" StrokeThickness="3" Fill="Red">
+                                <Path.Data>
+                                    <PathGeometry>
+                                        <PathGeometry.Figures>
+                                            <PathFigure StartPoint="20,100" IsClosed="True">
+                                                <PolyQuadraticBezierSegment
+                        Points="0,0 100,20
+                                100,100 180,100
+                                200,200 100,180,
+                                100,100 20,100"/>
+                                            </PathFigure>
+                                        </PathGeometry.Figures>
+                                    </PathGeometry>
+                                </Path.Data>
+                            </Path>
                         </Canvas>
                     </Border>
+                </skia:SkiaHost>
+            </TabItem>
+            <TabItem Header="Images">
+                <skia:SkiaHost>
+                    <Canvas>
+                        <Image Width="200" Height="200" Stretch="Uniform" Canvas.Left="100" Canvas.Top="100" Source="Tulips.jpg"></Image>
+                    </Canvas>
                 </skia:SkiaHost>
             </TabItem>
         </TabControl>
