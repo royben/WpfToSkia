@@ -242,6 +242,24 @@
                             </Border>
 
                             <Path Canvas.Left="700" Canvas.Top="50" Stroke="Black" StrokeThickness="3" Fill="Red">
+                                <Path.Triggers>
+                                    <EventTrigger RoutedEvent="MouseEnter">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <ColorAnimation Storyboard.TargetProperty="Fill.Color" To="Black" Duration="00:00:0.3"></ColorAnimation>
+                                                <ColorAnimation Storyboard.TargetProperty="Stroke.Color" To="Red" Duration="00:00:0.3"></ColorAnimation>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                    <EventTrigger RoutedEvent="MouseLeave">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <ColorAnimation Storyboard.TargetProperty="Fill.Color" To="Red" Duration="00:00:0.3"></ColorAnimation>
+                                                <ColorAnimation Storyboard.TargetProperty="Stroke.Color" To="Black" Duration="00:00:0.3"></ColorAnimation>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Path.Triggers>
                                 <Path.Data>
                                     <PathGeometry>
                                         <PathGeometry.Figures>
@@ -254,6 +272,24 @@
                             </Path>
 
                             <Path Canvas.Left="950" Canvas.Top="50" Stroke="Black" StrokeThickness="3" Fill="Red">
+                                <Path.Triggers>
+                                    <EventTrigger RoutedEvent="MouseEnter">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <ColorAnimation Storyboard.TargetProperty="Fill.Color" To="Black" Duration="00:00:0.3"></ColorAnimation>
+                                                <ColorAnimation Storyboard.TargetProperty="Stroke.Color" To="Red" Duration="00:00:0.3"></ColorAnimation>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                    <EventTrigger RoutedEvent="MouseLeave">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <ColorAnimation Storyboard.TargetProperty="Fill.Color" To="Red" Duration="00:00:0.3"></ColorAnimation>
+                                                <ColorAnimation Storyboard.TargetProperty="Stroke.Color" To="Black" Duration="00:00:0.3"></ColorAnimation>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Path.Triggers>
                                 <Path.Data>
                                     <PathGeometry>
                                         <PathGeometry.Figures>
@@ -270,6 +306,24 @@
                             </Path>
 
                             <Path Canvas.Left="100" Canvas.Top="300" Stroke="Black" StrokeThickness="3" Fill="Red">
+                                <Path.Triggers>
+                                    <EventTrigger RoutedEvent="MouseEnter">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <ColorAnimation Storyboard.TargetProperty="Fill.Color" To="Black" Duration="00:00:0.3"></ColorAnimation>
+                                                <ColorAnimation Storyboard.TargetProperty="Stroke.Color" To="Red" Duration="00:00:0.3"></ColorAnimation>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                    <EventTrigger RoutedEvent="MouseLeave">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <ColorAnimation Storyboard.TargetProperty="Fill.Color" To="Red" Duration="00:00:0.3"></ColorAnimation>
+                                                <ColorAnimation Storyboard.TargetProperty="Stroke.Color" To="Black" Duration="00:00:0.3"></ColorAnimation>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Path.Triggers>
                                 <Path.Data>
                                     <PathGeometry>
                                         <PathGeometry.Figures>
@@ -291,7 +345,39 @@
             <TabItem Header="Images">
                 <skia:SkiaHost>
                     <Canvas>
-                        <Image Width="200" Height="200" Stretch="Uniform" Canvas.Left="100" Canvas.Top="100" Source="Tulips.jpg"></Image>
+                        <Image Width="200" Height="200" Stretch="Fill" Canvas.Left="100" Canvas.Top="100" RenderTransformOrigin="0.5,0.5">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Setter Property="Source" Value="Tulips.jpg"></Setter>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Source" Value="koala.jpg"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                            <Image.RenderTransform>
+                                <ScaleTransform ScaleX="1" ScaleY="1" />
+                            </Image.RenderTransform>
+                            <Image.Triggers>
+                                <EventTrigger RoutedEvent="MouseEnter">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX" To="2" Duration="00:00:0.3"></DoubleAnimation>
+                                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY" To="2" Duration="00:00:0.3"></DoubleAnimation>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                                <EventTrigger RoutedEvent="MouseLeave">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX" To="1" Duration="00:00:0.3"></DoubleAnimation>
+                                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY" To="1" Duration="00:00:0.3"></DoubleAnimation>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Image.Triggers>
+                        </Image>
                     </Canvas>
                 </skia:SkiaHost>
             </TabItem>
