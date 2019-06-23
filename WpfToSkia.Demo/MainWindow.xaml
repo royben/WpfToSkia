@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="720" Width="1280" DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}" d:DataContext="{d:DesignInstance Type={x:Type local:MainWindow},IsDesignTimeCreatable=False}">
     <Grid Background="Transparent">
-        <TabControl>
+        <TabControl x:Name="tabControl">
             <TabItem Header="None">
 
             </TabItem>
@@ -338,6 +338,27 @@
                                     </PathGeometry>
                                 </Path.Data>
                             </Path>
+
+                            <Polygon Canvas.Top="300" Canvas.Left="300" Points="50, 100 200, 100 200, 200 300, 30" Stroke="Black" StrokeThickness="3" Fill="Red">
+                                <Polygon.Triggers>
+                                    <EventTrigger RoutedEvent="MouseEnter">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <ColorAnimation Storyboard.TargetProperty="Fill.Color" To="Black" Duration="00:00:0.3"></ColorAnimation>
+                                                <ColorAnimation Storyboard.TargetProperty="Stroke.Color" To="Red" Duration="00:00:0.3"></ColorAnimation>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                    <EventTrigger RoutedEvent="MouseLeave">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <ColorAnimation Storyboard.TargetProperty="Fill.Color" To="Red" Duration="00:00:0.3"></ColorAnimation>
+                                                <ColorAnimation Storyboard.TargetProperty="Stroke.Color" To="Black" Duration="00:00:0.3"></ColorAnimation>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Polygon.Triggers>
+                            </Polygon>
                         </Canvas>
                     </Border>
                 </skia:SkiaHost>
@@ -379,6 +400,13 @@
                             </Image.Triggers>
                         </Image>
                     </Canvas>
+                </skia:SkiaHost>
+            </TabItem>
+            <TabItem Header="RealTime Polygon" x:Name="polygonTabItem">
+                <skia:SkiaHost x:Name="graphHost">
+                    <Border>
+                        <Polygon Stroke="Black" Fill="Red" StrokeThickness="2" Points="{Binding Points}"></Polygon>
+                    </Border>
                 </skia:SkiaHost>
             </TabItem>
         </TabControl>

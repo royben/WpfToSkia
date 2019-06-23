@@ -49,19 +49,22 @@ namespace WpfToSkia.DrawingContexts
             _canvas.ApplyTransform(style.Transform, style.TransformOrigin, bounds);
 
             var pp = points.Select(x => x.ToSKPoint()).ToArray();
+            SKPath path = new SKPath();
+            path.AddPoly(pp, true);
+            path.Offset(bounds.Left.ToFloat(), bounds.Top.ToFloat());
 
             if (style.HasFill)
             {
                 SKPaint paintFill = new SKPaint();
                 paintFill.ApplyFill(bounds, style);
-                _canvas.DrawPoints(SKPointMode.Polygon, pp, paintFill);
+                _canvas.DrawPath(path, paintFill);
             }
 
             if (style.HasStroke)
             {
                 SKPaint paintStroke = new SKPaint();
                 paintStroke.ApplyStroke(bounds, style);
-                _canvas.DrawPoints(SKPointMode.Polygon, pp, paintStroke);
+                _canvas.DrawPath(path, paintStroke);
             }
 
             _canvas.ResetMatrix();

@@ -76,7 +76,7 @@ namespace WpfToSkia
 
         private void SkiaHost_Loaded(object sender, RoutedEventArgs e)
         {
-            if (_host_loaded || this.ActualWidth == 0 || this.ActualHeight == 0) return;
+            if (_host_loaded || this.ActualWidth == 0 || this.ActualHeight == 0 || Child == null) return;
 
             if (this.DesignMode())
             {
@@ -116,27 +116,6 @@ namespace WpfToSkia
             }
         }
 
-        private void InvalidatePartial(Rect bounds)
-        {
-            //int width = (int)_bitmap.Width;
-            //int height = (int)_bitmap.Height;
-
-            //_bitmap.Lock();
-
-            //using (var surface = SKSurface.Create(new SKImageInfo(width, height, SKColorType.Bgra8888, SKAlphaType.Premul), _bitmap.BackBuffer, width * 4))
-            //{
-            //    SKCanvas canvas = surface.Canvas;
-            //    canvas.Clear(new SKColor(0, 0, 0, 0));
-            //    _tree.Root.Render(new RenderPackage()
-            //    {
-            //        Canvas = canvas,
-            //    });
-            //}
-
-            //_bitmap.AddDirtyRect(new Int32Rect((int)bounds.Left, (int)bounds.Top, (int)bounds.Width + 1, (int)bounds.Height + 1));
-            //_bitmap.Unlock();
-        }
-
         protected override int VisualChildrenCount
         {
             get
@@ -166,28 +145,38 @@ namespace WpfToSkia
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            if (this.DesignMode())
+            if (Child != null)
             {
+                if (this.DesignMode())
+                {
+                    return Child.DesiredSize;
+                }
+                else
+                {
+                    Child.Measure(availableSize);
+                    _image.Measure(availableSize);
+                }
                 return Child.DesiredSize;
             }
             else
             {
-                Child.Measure(availableSize);
-                _image.Measure(availableSize);
+                return availableSize;
             }
-            return Child.DesiredSize;
         }
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            if (this.DesignMode())
+            if (Child != null)
             {
-                Child.Arrange(new Rect(new Point(0.0, 0.0), finalSize));
-            }
-            else
-            {
-                Child.Arrange(new Rect(new Point(0.0, 0.0), finalSize));
-                _image.Arrange(new Rect(new Point(0.0, 0.0), finalSize));
+                if (this.DesignMode())
+                {
+                    Child.Arrange(new Rect(new Point(0.0, 0.0), finalSize));
+                }
+                else
+                {
+                    Child.Arrange(new Rect(new Point(0.0, 0.0), finalSize));
+                    _image.Arrange(new Rect(new Point(0.0, 0.0), finalSize));
+                }
             }
 
             return finalSize;

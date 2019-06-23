@@ -16,13 +16,16 @@ namespace WpfToSkia.SkiaElements
 
             Polygon polygon = WpfElement as Polygon;
 
-            DrawingStyle style = DrawingStyle.FromElement(this);
-            style.Fill = polygon.Fill;
-            style.Stroke = polygon.Stroke;
-            style.StrokeThickness = new Thickness(polygon.StrokeThickness);
-            style.Opacity = opacity;
+            if (polygon.Points != null)
+            {
+                DrawingStyle style = DrawingStyle.FromElement(this);
+                style.Fill = polygon.Fill;
+                style.Stroke = polygon.Stroke;
+                style.StrokeThickness = new Thickness(polygon.StrokeThickness);
+                style.Opacity = opacity;
 
-            context.DrawPolygon(bounds, polygon.Points.ToArray(), style);
+                context.DrawPolygon(bounds, polygon.Points.ToArray(), style);
+            }
         }
 
         public override List<BindingProperty> GetBindingProperties()

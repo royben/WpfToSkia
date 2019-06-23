@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace WpfToSkia.Demo
 {
@@ -30,13 +31,28 @@ namespace WpfToSkia.Demo
         public static readonly DependencyProperty ItemsProperty =
             DependencyProperty.Register("Items", typeof(ObservableCollection<DataItem>), typeof(MainWindow), new PropertyMetadata(null));
 
-        int counter = 1;
+        public PointCollection Points
+        {
+            get { return (PointCollection)GetValue(PointsProperty); }
+            set { SetValue(PointsProperty, value); }
+        }
+        public static readonly DependencyProperty PointsProperty =
+            DependencyProperty.Register("Points", typeof(PointCollection), typeof(MainWindow), new PropertyMetadata(null));
+
+        private int counter = 1;
+        private DispatcherTimer _timer;
+        private Random _rnd;
 
         public MainWindow()
         {
+            _rnd = new Random();
+
             InitializeComponent();
 
             ContentRendered += MainWindow_ContentRendered;
+            _timer = new DispatcherTimer();
+            _timer.Interval = TimeSpan.FromMilliseconds(50);
+            _timer.Tick += _timer_Tick;
         }
 
         private void MainWindow_ContentRendered(object sender, EventArgs e)
@@ -52,6 +68,36 @@ namespace WpfToSkia.Demo
             }
 
             Items = items;
+
+            _timer.Start();
+        }
+
+        private void _timer_Tick(object sender, EventArgs e)
+        {
+            if (tabControl.SelectedItem == polygonTabItem)
+            {
+                Points = CreatePolygonPoints();
+            }
+        }
+
+        private PointCollection CreatePolygonPoints()
+        {
+            List<Point> points = new List<Point>();
+
+            double pointsCount = _rnd.Next(100, 1000);
+
+            for (double i = 0; i < pointsCount; i++)
+            {
+                double x = (i / pointsCount) * graphHost.ActualWidth;
+                double y = _rnd.Next(0, (int)graphHost.ActualHeight);
+
+                points.Add(new Point(x, y));
+            }
+
+            points.Add(new Point(graphHost.ActualWidth, 0));
+            points.Add(new Point(0, 0));
+
+            return new PointCollection(points);
         }
     }
 }
