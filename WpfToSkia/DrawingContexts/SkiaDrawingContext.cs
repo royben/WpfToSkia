@@ -14,24 +14,47 @@ using WpfToSkia.ExtensionsMethods;
 
 namespace WpfToSkia.DrawingContexts
 {
+    /// <summary>
+    /// Represents a Skia drawing context.
+    /// </summary>
+    /// <seealso cref="WpfToSkia.IDrawingContext" />
     public class SkiaDrawingContext : IDrawingContext
     {
         private SKCanvas _canvas;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SkiaDrawingContext"/> class.
+        /// </summary>
+        /// <param name="canvas">The canvas.</param>
         public SkiaDrawingContext(SKCanvas canvas)
         {
             _canvas = canvas;
         }
 
+        /// <summary>
+        /// Called before drawing session starts.
+        /// </summary>
         public void BeginDrawing()
         {
             _canvas.Save();
         }
 
+        /// <summary>
+        /// Clears the current surface.
+        /// </summary>
+        /// <param name="color">The color.</param>
         public void Clear(Color color)
         {
             _canvas.Clear(color.ToSKColor());
         }
 
+        /// <summary>
+        /// Draws a line.
+        /// </summary>
+        /// <param name="bounds">The bounds.</param>
+        /// <param name="p1">The p1.</param>
+        /// <param name="p2">The p2.</param>
+        /// <param name="style">The style.</param>
         public void DrawLine(Rect bounds, Point p1, Point p2, DrawingStyle style)
         {
             _canvas.ApplyTransform(style.Transform, style.TransformOrigin, bounds);
@@ -44,6 +67,12 @@ namespace WpfToSkia.DrawingContexts
             _canvas.ResetMatrix();
         }
 
+        /// <summary>
+        /// Draws a polygon.
+        /// </summary>
+        /// <param name="bounds">The bounds.</param>
+        /// <param name="points">The points.</param>
+        /// <param name="style">The style.</param>
         public void DrawPolygon(Rect bounds, Point[] points, DrawingStyle style)
         {
             _canvas.ApplyTransform(style.Transform, style.TransformOrigin, bounds);
@@ -70,6 +99,11 @@ namespace WpfToSkia.DrawingContexts
             _canvas.ResetMatrix();
         }
 
+        /// <summary>
+        /// Draws a rectangle. Rounded rectangle can be specified using the <see cref="DrawingStyle.CornerRadius" /> property.
+        /// </summary>
+        /// <param name="bounds">The bounds.</param>
+        /// <param name="style">The style.</param>
         public void DrawRect(Rect bounds, DrawingStyle style)
         {
             _canvas.ApplyTransform(style.Transform, style.TransformOrigin, bounds);
@@ -109,6 +143,11 @@ namespace WpfToSkia.DrawingContexts
             _canvas.ResetMatrix();
         }
 
+        /// <summary>
+        /// Clips the current drawing session.
+        /// </summary>
+        /// <param name="bounds">The bounds.</param>
+        /// <param name="cornerRadius">The corner radius.</param>
         public void ClipRect(Rect bounds, CornerRadius cornerRadius)
         {
             if (cornerRadius.TopLeft > 0)
@@ -121,6 +160,11 @@ namespace WpfToSkia.DrawingContexts
             }
         }
 
+        /// <summary>
+        /// Draws an ellipse.
+        /// </summary>
+        /// <param name="bounds">The bounds.</param>
+        /// <param name="style">The style.</param>
         public void DrawEllipse(Rect bounds, DrawingStyle style)
         {
             _canvas.ApplyTransform(style.Transform, style.TransformOrigin, bounds);
@@ -144,6 +188,12 @@ namespace WpfToSkia.DrawingContexts
             _canvas.ResetMatrix();
         }
 
+        /// <summary>
+        /// Draws the specified text.
+        /// </summary>
+        /// <param name="bounds">The bounds.</param>
+        /// <param name="text">The text.</param>
+        /// <param name="style">The style.</param>
         public void DrawText(Rect bounds, string text, DrawingStyle style)
         {
             _canvas.ApplyTransform(style.Transform, style.TransformOrigin, bounds);
@@ -188,6 +238,12 @@ namespace WpfToSkia.DrawingContexts
             _canvas.ResetMatrix();
         }
 
+        /// <summary>
+        /// Draws the specified image.
+        /// </summary>
+        /// <param name="bounds">The bounds.</param>
+        /// <param name="image">The image.</param>
+        /// <param name="style">The style.</param>
         public void DrawImage(Rect bounds, BitmapSource image, DrawingStyle style)
         {
             _canvas.ApplyTransform(style.Transform, style.TransformOrigin, bounds);
@@ -204,6 +260,12 @@ namespace WpfToSkia.DrawingContexts
             _canvas.ResetMatrix();
         }
 
+        /// <summary>
+        /// Draws the specified geometry.
+        /// </summary>
+        /// <param name="bounds">The bounds.</param>
+        /// <param name="geometry">The geometry.</param>
+        /// <param name="style">The style.</param>
         public void DrawGeometry(Rect bounds, Geometry geometry, DrawingStyle style)
         {
             _canvas.ApplyTransform(style.Transform, style.TransformOrigin, bounds);
@@ -237,6 +299,9 @@ namespace WpfToSkia.DrawingContexts
             _canvas.ResetMatrix();
         }
 
+        /// <summary>
+        /// Called when the drawing sessions ends.
+        /// </summary>
         public void EndDrawing()
         {
             _canvas.Restore();

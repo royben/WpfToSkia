@@ -7,9 +7,17 @@ using System.Windows;
 
 namespace WpfToSkia
 {
+    /// <summary>
+    /// Represents a service which registers and holds the mapping between WPF elements and Skia elements.
+    /// </summary>
     public class SkiaElementResolver
     {
+        private Dictionary<Type, Type> _binders; //holds the element registrations.
+
         private static SkiaElementResolver _instance;
+        /// <summary>
+        /// Gets the default instance.
+        /// </summary>
         public static SkiaElementResolver Default
         {
             get
@@ -23,23 +31,38 @@ namespace WpfToSkia
             }
         }
 
-        private Dictionary<Type, Type> _binders;
-
-        public SkiaElementResolver()
+        /// <summary>
+        /// Prevents a default instance of the <see cref="SkiaElementResolver"/> class from being created.
+        /// </summary>
+        private SkiaElementResolver()
         {
             _binders = new Dictionary<Type, Type>();
         }
 
+        /// <summary>
+        /// Registers a binding between the specified WPF type to the specified Skia type.
+        /// </summary>
+        /// <typeparam name="TWpf">The type of the WPF.</typeparam>
+        /// <typeparam name="TSkia">The type of the skia.</typeparam>
         public void RegisterBinder<TWpf, TSkia>() where TWpf : FrameworkElement where TSkia : SkiaFrameworkElement
         {
             _binders.Add(typeof(TWpf), typeof(TSkia));
         }
 
+        /// <summary>
+        /// Clears all registrations.
+        /// </summary>
         public void Clear()
         {
             _binders.Clear();
         }
 
+        /// <summary>
+        /// Creates a new instance of a <see cref="SkiaFrameworkElement"/> by looking for a proper registration of the specified <see cref="FrameworkElement"/> type.
+        /// When no registration was found, will return a default instance of <see cref="SkiaFrameworkElement"/>.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <returns></returns>
         public SkiaFrameworkElement CreateElementFor(FrameworkElement element)
         {
             Type skiaType = null;

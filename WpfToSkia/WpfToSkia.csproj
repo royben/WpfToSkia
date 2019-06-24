@@ -103,10 +103,9 @@
     <Compile Include="BindingEventContainer.cs" />
     <Compile Include="BindingProperty.cs" />
     <Compile Include="BindingPropertyMode.cs" />
-    <None Include="DrawingContexts\GdiDrawingContext.cs" />
-    <None Include="DrawingContexts\MixedDrawingContext.cs" />
+    <Compile Include="DrawingContexts\GdiDrawingContext.cs" />
     <Compile Include="DrawingContexts\SkiaDrawingContext.cs" />
-    <None Include="DrawingContexts\WpfDrawingContext.cs" />
+    <Compile Include="DrawingContexts\WpfDrawingContext.cs" />
     <Compile Include="DrawingStyle.cs" />
     <Compile Include="ExtensionsMethods\BitmapSourceExtensions.cs" />
     <Compile Include="ExtensionsMethods\BrushExtensions.cs" />
@@ -120,7 +119,6 @@
     <Compile Include="ExtensionsMethods\SKPaintExtensions.cs" />
     <Compile Include="IDrawingContext.cs" />
     <Compile Include="IRenderer.cs" />
-    <Compile Include="ProducerConsumerQueue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -135,10 +133,9 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="RendererBase.cs" />
-    <None Include="Renderers\GdiRenderer.cs" />
-    <None Include="Renderers\MixedRenderer.cs" />
+    <Compile Include="Renderers\GdiRenderer.cs" />
     <Compile Include="Renderers\SkiaRenderer.cs" />
-    <None Include="Renderers\WpfRenderer.cs" />
+    <Compile Include="Renderers\WpfRenderer.cs" />
     <Compile Include="SkiaElementResolver.cs" />
     <Compile Include="SkiaElements\SkiaBorder.cs" />
     <Compile Include="SkiaElements\SkiaEllipse.cs" />
@@ -149,22 +146,10 @@
     <Compile Include="SkiaElements\SkiaPolygon.cs" />
     <Compile Include="SkiaElements\SkiaRectangle.cs" />
     <Compile Include="SkiaElements\SkiaScrollViewer.cs" />
-    <Compile Include="SkiaElements\SkiaStackPanel.cs" />
     <Compile Include="SkiaElements\SkiaTextBlock.cs" />
     <Compile Include="SkiaFrameworkElement.cs" />
     <Compile Include="SkiaHost.cs" />
     <Compile Include="SkiaTree.cs" />
-    <Compile Include="SkiaTreeHelper.cs" />
-    <Compile Include="Wgl\Gdi32.cs" />
-    <Compile Include="Wgl\GlContext.cs" />
-    <Compile Include="Wgl\Kernel32.cs" />
-    <Compile Include="Wgl\PIXELFORMATDESCRIPTOR.cs" />
-    <Compile Include="Wgl\RECT.cs" />
-    <Compile Include="Wgl\User32.cs" />
-    <Compile Include="Wgl\Wgl.cs" />
-    <Compile Include="Wgl\WglContext.cs" />
-    <Compile Include="Wgl\WindowStyles.cs" />
-    <Compile Include="Wgl\WNDCLASS.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

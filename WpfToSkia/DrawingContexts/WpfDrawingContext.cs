@@ -26,7 +26,7 @@ namespace WpfToSkia.DrawingContexts
 
         public void BeginDrawing()
         {
-            
+
         }
 
         public void Clear(Color color)
@@ -58,7 +58,7 @@ namespace WpfToSkia.DrawingContexts
             throw new NotImplementedException();
         }
 
-        public void DrawText(string text, Rect bounds, DrawingStyle style)
+        public void DrawText(Rect bounds, string text, DrawingStyle style)
         {
             throw new NotImplementedException();
         }
@@ -73,9 +73,19 @@ namespace WpfToSkia.DrawingContexts
             throw new NotImplementedException();
         }
 
+        public void DrawLine(Rect bounds, Point p1, Point p2, DrawingStyle style)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DrawPolygon(Rect bounds, Point[] points, DrawingStyle style)
+        {
+            throw new NotImplementedException();
+        }
+
         public void EndDrawing()
         {
-            
+
         }
     }
 }

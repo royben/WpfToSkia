@@ -57,7 +57,7 @@ namespace WpfToSkia.DrawingContexts
             _g.SetClip(bounds.ToGdiRectF());
         }
 
-        public void DrawText(string text, Rect bounds, DrawingStyle style)
+        public void DrawText(Rect bounds, string text, DrawingStyle style)
         {
             if (style.Fill != null)
             {
@@ -65,11 +65,6 @@ namespace WpfToSkia.DrawingContexts
                 _g.DrawString(text, System.Drawing.SystemFonts.DefaultFont, fill, bounds.ToGdiRectF());
                 fill.Dispose();
             }
-        }
-
-        public void EndDrawing()
-        {
-
         }
 
         public void DrawEllipse(Rect bounds, DrawingStyle style)
@@ -85,6 +80,21 @@ namespace WpfToSkia.DrawingContexts
         public void DrawGeometry(Rect bounds, Geometry geometry, DrawingStyle style)
         {
             throw new NotImplementedException();
+        }
+
+        public void DrawLine(Rect bounds, System.Windows.Point p1, System.Windows.Point p2, DrawingStyle style)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DrawPolygon(Rect bounds, System.Windows.Point[] points, DrawingStyle style)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void EndDrawing()
+        {
+
         }
     }
 }

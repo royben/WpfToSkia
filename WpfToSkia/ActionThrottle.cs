@@ -8,6 +8,9 @@ using System.Windows.Threading;
 
 namespace WpfToSkia
 {
+    /// <summary>
+    /// Represents an action execution throttling mechanism.
+    /// </summary>
     public class ActionThrottle
     {
         private Timer _timer;
@@ -15,9 +18,10 @@ namespace WpfToSkia
         private Dispatcher _dispatcher;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ActionTimer"/> class.
+        /// Initializes a new instance of the <see cref="ActionThrottle"/> class.
         /// </summary>
         /// <param name="interval">The interval.</param>
+        /// <param name="dispatcher">The dispatcher.</param>
         public ActionThrottle(TimeSpan interval, Dispatcher dispatcher)
         {
             _dispatcher = dispatcher;

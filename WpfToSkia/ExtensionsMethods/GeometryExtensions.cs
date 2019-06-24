@@ -34,8 +34,6 @@ namespace WpfToSkia.ExtensionsMethods
                 sk.AddSegment(segment);
             }
 
-            //sk.LineTo(figure.StartPoint.ToSKPoint());
-
             if (figure.IsClosed)
             {
                 sk.Close();
