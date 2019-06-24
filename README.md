@@ -51,4 +51,38 @@ Once the required bitmap size exceeds the maximum size, which usually occurs whe
 
 The Skia Renderer is very fast at rendering many elements but they might take a lot of time to be measured by WPF’s measuring pass before they are loaded. That is why WPF has a virtualization technique where a VirtualizedStackPanel can be placed as an ItemsSource control panel template and a ScrollViewer as a parent. SkiaItemsControl element can detects this kind of behavior and notify the renderer when child elements are added/removed (virtualized) and a Tree injection/ejection/render call is required.
 
+### Usage Example
 
+```xaml
+  
+<skia:SkiaHost>
+    <Border>
+        <Canvas>
+            <Ellipse Canvas.Left="100" Canvas.Top="100" Width="100" Height="100" Fill="Red" Stroke="Black" StrokeThickness="2" RenderTransformOrigin="0.5,0.5">
+                <Ellipse.RenderTransform>
+                    <ScaleTransform ScaleX="1" ScaleY="1" />
+                </Ellipse.RenderTransform>
+                <Ellipse.Triggers>
+                    <EventTrigger RoutedEvent="MouseEnter">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX" To="1.5" Duration="00:00:0.3"></DoubleAnimation>
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY" To="1.5" Duration="00:00:0.3"></DoubleAnimation>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                    <EventTrigger RoutedEvent="MouseLeave">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX" To="1" Duration="00:00:0.3"></DoubleAnimation>
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY" To="1" Duration="00:00:0.3"></DoubleAnimation>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Ellipse.Triggers>
+            </Ellipse>
+        </Canvas>
+    </Border>
+</skia:SkiaHost>
+  
+  ```
