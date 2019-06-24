@@ -86,3 +86,7 @@ The Skia Renderer is very fast at rendering many elements but they might take a 
 </skia:SkiaHost>
   
   ```
+  
+  ### Demo Application
+  The project contains a sample application demonstrating basic use of the library.
+  
