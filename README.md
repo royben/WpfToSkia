@@ -1,2 +1,3 @@
 # WpfToSkia
-An alternative WPF layout and rendering pipeline using Skia.
+This is an attempt of replacing WPF's rendering engine using Skia.
+
