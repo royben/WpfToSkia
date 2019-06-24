@@ -26,8 +26,6 @@ namespace WpfToSkia.DrawingContexts
             _g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.Low;
             _g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighSpeed;
             _g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighSpeed;
-            //_g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SystemDefault;
-            //_g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighSpeed;
         }
 
         public void Clear(System.Windows.Media.Color color)
