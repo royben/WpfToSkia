@@ -9,9 +9,6 @@
         Title="MainWindow" Height="720" Width="1280" DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}" d:DataContext="{d:DesignInstance Type={x:Type local:MainWindow},IsDesignTimeCreatable=False}">
     <Grid Background="Transparent">
         <TabControl x:Name="tabControl">
-            <TabItem Header="None">
-
-            </TabItem>
             <TabItem Header="Virtualized Items Source 1">
                 <DockPanel>
                     <TextBlock Margin="10" DockPanel.Dock="Top" HorizontalAlignment="Left" TextWrapping="Wrap" Width="500">
