@@ -90,3 +90,10 @@ The Skia Renderer is very fast at rendering many elements but they might take a 
   ### Demo Application
   The project contains a sample application demonstrating basic use of the library.
   
+  ![alt tag](https://github.com/royben/WpfToSkia/blob/master/Preview/Shapes.png)
+  
+  ![alt tag](https://github.com/royben/WpfToSkia/blob/master/Preview/Canvas.png)
+  
+  ![alt tag](https://github.com/royben/WpfToSkia/blob/master/Preview/Virtualization1.png)
+  
+  ![alt tag](https://github.com/royben/WpfToSkia/blob/master/Preview/Virtualization2.png)
