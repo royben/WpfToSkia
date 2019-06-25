@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -106,6 +108,19 @@ namespace WpfToSkia.Demo
             Grid grid = (sender as Thumb).Tag as Grid;
             Canvas.SetLeft(grid, Canvas.GetLeft(grid) + e.HorizontalChange);
             Canvas.SetTop(grid, Canvas.GetTop(grid) + e.VerticalChange);
+        }
+
+        private void btnExportPdf_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog dlg = new SaveFileDialog();
+            dlg.Filter = "PDF Documents|*.pdf";
+            if (dlg.ShowDialog().Value)
+            {
+                using (FileStream s = new FileStream(dlg.FileName, FileMode.Create))
+                {
+                    pdfHost.Renderer.ExportToPDF("Example WPF to PDF file", s);
+                }
+            }
         }
     }
 }

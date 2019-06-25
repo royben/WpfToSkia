@@ -442,6 +442,33 @@
                     </UniformGrid>
                 </DockPanel>
             </TabItem>
+            <TabItem Header="Export To PDF">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Right" Width="200">
+                        <Button Padding="10" Click="btnExportPdf_Click">EXPORT</Button>
+                    </StackPanel>
+                    <ScrollViewer>
+                        <skia:SkiaHost x:Name="pdfHost">
+                            <Border>
+                                <ItemsControl ItemsSource="{Binding Items}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" Margin="10">
+                                                <Border Width="50" Height="50">
+                                                    <Border.Background>
+                                                        <SolidColorBrush Color="{Binding Color}" />
+                                                    </Border.Background>
+                                                </Border>
+                                                <TextBlock VerticalAlignment="Center" Margin="10 0 0 0" Text="{Binding Name}"></TextBlock>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Border>
+                        </skia:SkiaHost>
+                    </ScrollViewer>
+                </DockPanel>
+            </TabItem>
         </TabControl>
     </Grid>
 </Window>

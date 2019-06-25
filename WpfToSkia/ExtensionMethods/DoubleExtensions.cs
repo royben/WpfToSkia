@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WpfToSkia.ExtensionsMethods
+namespace WpfToSkia.ExtensionMethods
 {
     public static class DoubleExtensions
     {

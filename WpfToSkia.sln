@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfToSkia", "WpfToSkia\WpfT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfToSkia.Demo", "WpfToSkia.Demo\WpfToSkia.Demo.csproj", "{472BF98B-10F6-4DC2-AE80-94C5CBF10D7F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfToSkia.PDF", "WpfToSkia.PDF\WpfToSkia.PDF.csproj", "{7E4E168C-EF00-4D6D-9497-3A0A0177893E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,18 @@ Global
 		{472BF98B-10F6-4DC2-AE80-94C5CBF10D7F}.Release|x64.Build.0 = Release|x64
 		{472BF98B-10F6-4DC2-AE80-94C5CBF10D7F}.Release|x86.ActiveCfg = Release|x86
 		{472BF98B-10F6-4DC2-AE80-94C5CBF10D7F}.Release|x86.Build.0 = Release|x86
+		{7E4E168C-EF00-4D6D-9497-3A0A0177893E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E4E168C-EF00-4D6D-9497-3A0A0177893E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E4E168C-EF00-4D6D-9497-3A0A0177893E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7E4E168C-EF00-4D6D-9497-3A0A0177893E}.Debug|x64.Build.0 = Debug|Any CPU
+		{7E4E168C-EF00-4D6D-9497-3A0A0177893E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7E4E168C-EF00-4D6D-9497-3A0A0177893E}.Debug|x86.Build.0 = Debug|Any CPU
+		{7E4E168C-EF00-4D6D-9497-3A0A0177893E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E4E168C-EF00-4D6D-9497-3A0A0177893E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E4E168C-EF00-4D6D-9497-3A0A0177893E}.Release|x64.ActiveCfg = Release|Any CPU
+		{7E4E168C-EF00-4D6D-9497-3A0A0177893E}.Release|x64.Build.0 = Release|Any CPU
+		{7E4E168C-EF00-4D6D-9497-3A0A0177893E}.Release|x86.ActiveCfg = Release|Any CPU
+		{7E4E168C-EF00-4D6D-9497-3A0A0177893E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

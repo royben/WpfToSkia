@@ -1,4 +1,4 @@
-﻿using SkiaSharp;
+﻿using PdfSharp.Drawing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,13 +6,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace WpfToSkia.ExtensionsMethods
+namespace WpfToSkia.PDF.ExtensionMethods
 {
     public static class PointExtensions
     {
-        public static SKPoint ToSKPoint(this Point point)
+        public static XPoint ToXPoint(this Point point)
         {
-            return new SKPoint(point.X.ToFloat(), point.Y.ToFloat());
+            return new XPoint(point.X, point.Y);
         }
     }
 }

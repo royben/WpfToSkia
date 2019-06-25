@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using SkiaSharp;
-using WpfToSkia.ExtensionsMethods;
+using WpfToSkia.ExtensionMethods;
 
 namespace WpfToSkia.SkiaElements
 {

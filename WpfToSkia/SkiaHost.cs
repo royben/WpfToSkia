@@ -3,7 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Markup;
 using System.Windows.Media;
 using WpfToSkia.SkiaElements;
-using WpfToSkia.ExtensionsMethods;
+using WpfToSkia.ExtensionMethods;
 using WpfToSkia.Renderers;
 using System.Windows.Shapes;
 

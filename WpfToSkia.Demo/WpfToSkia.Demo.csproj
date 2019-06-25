@@ -149,6 +149,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\WpfToSkia.PDF\WpfToSkia.PDF.csproj">
+      <Project>{7e4e168c-ef00-4d6d-9497-3a0a0177893e}</Project>
+      <Name>WpfToSkia.PDF</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WpfToSkia\WpfToSkia.csproj">
       <Project>{8b7cb6f2-7585-4c8d-9ca4-c77e5bc19440}</Project>
       <Name>WpfToSkia</Name>

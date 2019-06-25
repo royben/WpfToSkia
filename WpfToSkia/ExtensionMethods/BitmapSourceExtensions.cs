@@ -8,7 +8,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace WpfToSkia.ExtensionsMethods
+namespace WpfToSkia.ExtensionMethods
 {
     public static class BitmapSourceExtensions
     {
