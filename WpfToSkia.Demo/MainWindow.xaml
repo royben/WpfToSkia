@@ -10,7 +10,7 @@
     <Grid Background="Transparent">
         <TabControl x:Name="tabControl">
             <TabItem Header="Virtualized Items Source 1">
-                <DockPanel>
+                <DockPanel Height="661" VerticalAlignment="Bottom">
                     <TextBlock Margin="10" DockPanel.Dock="Top" HorizontalAlignment="Left" TextWrapping="Wrap" Width="500">
                         This tab demonstrates a virtualized ItemsControl with ScrollViewer all hosted inside a SkiaHost.
                         Hover over an item to see animation binding.
@@ -405,6 +405,42 @@
                         <Polygon Stroke="Black" Fill="Red" StrokeThickness="2" Points="{Binding Points}"></Polygon>
                     </Border>
                 </skia:SkiaHost>
+            </TabItem>
+            <TabItem Header="Streaming">
+                <TabItem.Resources>
+                    <Style x:Key="DragStyle" TargetType="Thumb">
+                        <Setter Property="Opacity" Value="0"></Setter>
+                        <EventSetter Event="DragDelta" Handler="Thumb_DragDelta"></EventSetter>
+                    </Style>
+                </TabItem.Resources>
+                <DockPanel>
+                    <TextBlock Margin="10" DockPanel.Dock="Top" HorizontalAlignment="Left" TextWrapping="Wrap" Width="500">
+                        This tab demonstrates binding to the renderer source image for video streaming/recording purposes.
+                        Drag the shapes to see the source change on the right side.
+                    </TextBlock>
+                    <UniformGrid Columns="2" Rows="1">
+                        <skia:SkiaHost x:Name="hostStreaming">
+                            <Border>
+                                <Canvas>
+                                    <Grid Canvas.Left="100" Canvas.Top="100">
+                                        <Ellipse Width="100" Height="100" Fill="Red"/>
+                                        <Thumb Tag="{Binding RelativeSource={RelativeSource AncestorType=Grid}}" Style="{StaticResource DragStyle}"></Thumb>
+                                    </Grid>
+
+                                    <Grid Canvas.Left="300" Canvas.Top="100">
+                                        <Rectangle Width="100" Height="100" Fill="Red"></Rectangle>
+                                        <Thumb Tag="{Binding RelativeSource={RelativeSource AncestorType=Grid}}" Style="{StaticResource DragStyle}"></Thumb>
+                                    </Grid>
+                                </Canvas>
+                            </Border>
+                        </skia:SkiaHost>
+                        <Border Background="#F1F1F1">
+                            <Image Source="{Binding ElementName=hostStreaming,Path=Renderer.Source}">
+
+                            </Image>
+                        </Border>
+                    </UniformGrid>
+                </DockPanel>
             </TabItem>
         </TabControl>
     </Grid>

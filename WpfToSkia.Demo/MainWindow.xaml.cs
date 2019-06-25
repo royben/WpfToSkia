@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -98,6 +99,13 @@ namespace WpfToSkia.Demo
             points.Add(new Point(0, 0));
 
             return new PointCollection(points);
+        }
+
+        private void Thumb_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
+        {
+            Grid grid = (sender as Thumb).Tag as Grid;
+            Canvas.SetLeft(grid, Canvas.GetLeft(grid) + e.HorizontalChange);
+            Canvas.SetTop(grid, Canvas.GetTop(grid) + e.VerticalChange);
         }
     }
 }

@@ -19,9 +19,8 @@ namespace WpfToSkia
     /// </summary>
     /// <typeparam name="T">Type of <see cref="IDrawingContext"/></typeparam>
     /// <seealso cref="WpfToSkia.IRenderer" />
-    public abstract class RendererBase<T> : IRenderer where T : IDrawingContext
+    public abstract class RendererBase<T> : DependencyObject, IRenderer where T : IDrawingContext
     {
-        private WriteableBitmap _bitmap;
         private SkiaHost _host;
         private ScrollViewer _scrollViewer;
         private List<BindingEventContainer> _containers;
@@ -47,14 +46,6 @@ namespace WpfToSkia
         public SkiaTree SkiaTree { get; private set; }
 
         /// <summary>
-        /// Gets the current source bitmap.
-        /// </summary>
-        public WriteableBitmap Source
-        {
-            get { return _bitmap; }
-        }
-
-        /// <summary>
         /// Gets a value indicating whether the <see cref="SkiaHost" /> is inside a ScrollViewer and the its size exceeded the <see cref="MaximumBitmapSize" />.
         /// </summary>
         public bool IsVirtualizing
@@ -63,30 +54,71 @@ namespace WpfToSkia
         }
 
         /// <summary>
+        /// Gets the current source bitmap.
+        /// </summary>
+        public WriteableBitmap Source
+        {
+            get { return (WriteableBitmap)GetValue(SourceProperty); }
+            private set { SetValue(SourceProperty, value); }
+        }
+        public static readonly DependencyProperty SourceProperty =
+            DependencyProperty.Register("Source", typeof(WriteableBitmap), typeof(RendererBase<T>), new PropertyMetadata(null));
+
+        /// <summary>
         /// Gets or sets the maximum size of the bitmap.
         /// When the actual size exceeds this value, the renderer will start to virtualize the rendering.
         /// </summary>
-        public int MaximumBitmapSize { get; set; }
+        public int MaximumBitmapSize
+        {
+            get { return (int)GetValue(MaximumBitmapSizeProperty); }
+            set { SetValue(MaximumBitmapSizeProperty, value); }
+        }
+        public static readonly DependencyProperty MaximumBitmapSizeProperty =
+            DependencyProperty.Register("MaximumBitmapSize", typeof(int), typeof(RendererBase<T>), new PropertyMetadata(4000 * 4000));
 
         /// <summary>
         /// Gets or sets the maximum response rate for properties changes.
         /// </summary>
-        public double BindingFPS { get; set; }
+        public double BindingFPS
+        {
+            get { return (double)GetValue(BindingFPSProperty); }
+            set { SetValue(BindingFPSProperty, value); }
+        }
+        public static readonly DependencyProperty BindingFPSProperty =
+            DependencyProperty.Register("BindingFPS", typeof(double), typeof(RendererBase<T>), new PropertyMetadata(60.0));
 
         /// <summary>
         /// Gets or sets the maximum response rate for parent ScrollViewer changes.
         /// </summary>
-        public double ScrollingFPS { get; set; }
+        public double ScrollingFPS
+        {
+            get { return (double)GetValue(ScrollingFPSProperty); }
+            set { SetValue(ScrollingFPSProperty, value); }
+        }
+        public static readonly DependencyProperty ScrollingFPSProperty =
+            DependencyProperty.Register("ScrollingFPS", typeof(double), typeof(RendererBase<T>), new PropertyMetadata(30.0));
 
         /// <summary>
         /// Gets or sets the maximum response rate for size changes.
         /// </summary>
-        public double SizingFPS { get; set; }
+        public double SizingFPS
+        {
+            get { return (double)GetValue(SizingFPSProperty); }
+            set { SetValue(SizingFPSProperty, value); }
+        }
+        public static readonly DependencyProperty SizingFPSProperty =
+            DependencyProperty.Register("SizingFPS", typeof(double), typeof(RendererBase<T>), new PropertyMetadata(30.0));
 
         /// <summary>
         /// Gets or sets a value indicating whether to enable invalidation of elements when their properties changes.
         /// </summary>
-        public bool EnableBinding { get; set; }
+        public bool EnableBinding
+        {
+            get { return (bool)GetValue(EnableBindingProperty); }
+            set { SetValue(EnableBindingProperty, value); }
+        }
+        public static readonly DependencyProperty EnableBindingProperty =
+            DependencyProperty.Register("EnableBinding", typeof(bool), typeof(RendererBase<T>), new PropertyMetadata(true));
 
         #endregion
 
@@ -233,7 +265,7 @@ namespace WpfToSkia
         /// </summary>
         protected void Render()
         {
-            _bitmap.Lock();
+            Source.Lock();
 
             T context = CreateDrawingContext();
 
@@ -244,10 +276,10 @@ namespace WpfToSkia
 
             context.EndDrawing();
 
-            OnRenderCompleted(_bitmap.BackBuffer, (int)_bitmap.Width, (int)_bitmap.Height, (int)_bitmap.Width * 4);
+            OnRenderCompleted(Source.BackBuffer, (int)Source.Width, (int)Source.Height, (int)Source.Width * 4);
 
-            _bitmap.AddDirtyRect(new Int32Rect(0, 0, (int)_bitmap.Width, (int)_bitmap.Height));
-            _bitmap.Unlock();
+            Source.AddDirtyRect(new Int32Rect(0, 0, (int)Source.Width, (int)Source.Height));
+            Source.Unlock();
 
             OnSourceChanged();
         }
@@ -278,9 +310,9 @@ namespace WpfToSkia
                 }
             }
 
-            if (bounds.Left < _bitmap.Width && bounds.Top < _bitmap.Height)
+            if (bounds.Left < Source.Width && bounds.Top < Source.Height)
             {
-                _bitmap.Lock();
+                Source.Lock();
 
                 T context = CreateDrawingContext();
 
@@ -293,20 +325,20 @@ namespace WpfToSkia
 
                 context.EndDrawing();
 
-                if (bounds.Right > _bitmap.Width)
+                if (bounds.Right > Source.Width)
                 {
-                    bounds.Width = _bitmap.Width - bounds.Left;
+                    bounds.Width = Source.Width - bounds.Left;
                 }
 
-                if (bounds.Bottom > _bitmap.Height)
+                if (bounds.Bottom > Source.Height)
                 {
-                    bounds.Height = _bitmap.Height - bounds.Top;
+                    bounds.Height = Source.Height - bounds.Top;
                 }
 
-                OnRenderCompleted(_bitmap.BackBuffer, (int)_bitmap.Width, (int)_bitmap.Height, (int)_bitmap.Width * 4);
+                OnRenderCompleted(Source.BackBuffer, (int)Source.Width, (int)Source.Height, (int)Source.Width * 4);
 
-                _bitmap.AddDirtyRect(new Int32Rect((int)Math.Max(bounds.Left, 0), (int)Math.Max(bounds.Top, 0), (int)bounds.Width, (int)bounds.Height));
-                _bitmap.Unlock();
+                Source.AddDirtyRect(new Int32Rect((int)Math.Max(bounds.Left, 0), (int)Math.Max(bounds.Top, 0), (int)bounds.Width, (int)bounds.Height));
+                Source.Unlock();
             }
         }
 
@@ -398,17 +430,17 @@ namespace WpfToSkia
                 renderHeight = _scrollViewer.ViewportHeight;
             }
 
-            _bitmap = new WriteableBitmap((int)Math.Max(renderWidth, 1), (int)Math.Max(renderHeight, 1), 96, 96, PixelFormats.Bgra32, BitmapPalettes.Halftone256Transparent);
+            Source = new WriteableBitmap((int)Math.Max(renderWidth, 1), (int)Math.Max(renderHeight, 1), 96, 96, PixelFormats.Bgra32, BitmapPalettes.Halftone256Transparent);
 
-            int width = (int)_bitmap.Width;
-            int height = (int)_bitmap.Height;
+            int width = (int)Source.Width;
+            int height = (int)Source.Height;
 
-            _bitmap.Lock();
+            Source.Lock();
 
-            OnSurfaceCreated(_bitmap.BackBuffer, width, height, width * 4);
+            OnSurfaceCreated(Source.BackBuffer, width, height, width * 4);
 
-            _bitmap.AddDirtyRect(new Int32Rect(0, 0, width, height));
-            _bitmap.Unlock();
+            Source.AddDirtyRect(new Int32Rect(0, 0, width, height));
+            Source.Unlock();
         }
 
         #endregion
@@ -451,7 +483,7 @@ namespace WpfToSkia
         /// </summary>
         protected virtual void OnSourceChanged()
         {
-            SourceChanged?.Invoke(this, _bitmap);
+            SourceChanged?.Invoke(this, Source);
         }
 
         #endregion
