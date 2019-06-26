@@ -14,6 +14,7 @@ namespace WpfToSkia.PDF
     public class PdfDrawingContext : IDrawingContext
     {
         private XGraphics _g;
+        private double _offset;
 
         public event EventHandler<Rect> Rendering;
 
@@ -22,9 +23,10 @@ namespace WpfToSkia.PDF
             _g = g;
         }
 
-        public void Reset(XGraphics g)
+        public void Reset(XGraphics g, double offset)
         {
             _g = g;
+            _offset = offset;
         }
 
         public void BeginDrawing()
@@ -40,6 +42,8 @@ namespace WpfToSkia.PDF
         public void DrawRect(Rect bounds, DrawingStyle style)
         {
             OnRendering(bounds);
+
+            bounds.Offset(0, -_offset);
 
             if (style.HasFill)
             {
@@ -75,6 +79,8 @@ namespace WpfToSkia.PDF
         {
             OnRendering(bounds);
 
+            bounds.Offset(0, -_offset);
+
             if (style.HasFill)
             {
                 _g.DrawEllipse(style.Fill.ToXBrush(bounds.Width, bounds.Height), bounds.ToXRect());
@@ -89,6 +95,8 @@ namespace WpfToSkia.PDF
         public void DrawText(Rect bounds, string text, DrawingStyle style)
         {
             OnRendering(bounds);
+
+            bounds.Offset(0, -_offset);
 
             XFontStyle fontStyle = XFontStyle.Regular;
 
@@ -115,6 +123,8 @@ namespace WpfToSkia.PDF
         {
             OnRendering(bounds);
 
+            bounds.Offset(0, -_offset);
+
             _g.DrawImage(XImage.FromBitmapSource(image), bounds.ToXRect());
         }
 
@@ -127,12 +137,16 @@ namespace WpfToSkia.PDF
         {
             OnRendering(bounds);
 
+            bounds.Offset(0, -_offset);
+
             _g.DrawLine(new XPen(style.Stroke.ToXColor()), p1.ToXPoint(), p2.ToXPoint());
         }
 
         public void DrawPolygon(Rect bounds, Point[] points, DrawingStyle style)
         {
             OnRendering(bounds);
+
+            bounds.Offset(0, -_offset);
 
             _g.TranslateTransform(bounds.Left, bounds.Top);
 

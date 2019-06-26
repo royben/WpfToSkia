@@ -13,8 +13,6 @@ public static class IRendererExtensions
 {
     public static void ExportToPDF(this IRenderer renderer, String title, Stream stream)
     {
-        double current_position = 0;
-
         var root = renderer.SkiaTree.Root;
 
         PdfDocument document = new PdfDocument();
@@ -26,18 +24,16 @@ public static class IRendererExtensions
         XGraphics gfx = XGraphics.FromPdfPage(page);
 
         PdfDrawingContext context = new PdfDrawingContext(gfx);
-        context.Rendering += (sender, bounds) => 
+        
+        context.Rendering += (sender, bounds) =>
         {
-            current_position = bounds.Bottom;
-
-            if (current_position > page.Height)
+            if (bounds.Bottom > page.Height.Value * (double)document.PageCount && bounds.Height < page.Height)
             {
-                current_position = 0;
                 page = document.AddPage();
                 page.Size = PdfSharp.PageSize.A4;
                 gfx.Dispose();
                 gfx = XGraphics.FromPdfPage(page);
-                context.Reset(gfx);
+                context.Reset(gfx, (page.Height.Value * (document.PageCount - 1)));
             }
         };
 
